@@ -1,0 +1,24 @@
+# Machine-specific data for templates
+# https://www.chezmoi.io/reference/templates/chezmoi-data/
+
+# Default values (can be overridden per machine)
+email: "{{ .chezmoi.username }}@example.com"
+shell: "{{ .chezmoi.os }}"
+
+# OS-specific detection
+# Available variables:
+#   .chezmoi.os         - linux, darwin, windows, freebsd
+#   .chezmoi.arch      - arm64, amd64, x86, etc.
+#   .chezmoi.hostname  - machine hostname
+#   .chezmoi.username  - current username
+
+# Example machine-specific overrides (uncomment and customize):
+# machines:
+#   work-laptop:
+#     os: darwin
+#     shell: zsh
+#     email: work@example.com
+#   home-desktop:
+#     os: linux
+#     shell: bash
+#     email: home@example.com

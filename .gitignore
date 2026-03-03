@@ -1,0 +1,29 @@
+# Chezmoi local files
+.chezmoi*
+*.local
+
+# OS-specific secrets (never commit)
+*.key
+*.pem
+*.ppk
+id_*
+!id_*.pub
+
+# Temporary files
+*.tmp
+*.swp
+*~
+.DS_Store
+
+# IDE and editor files
+.idea/
+.vscode/
+*.code-workspace
+
+# Backup files
+*.bak
+*.backup
+
+# Test artifacts
+test-output/
+*.log

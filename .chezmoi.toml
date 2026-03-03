@@ -1,0 +1,22 @@
+# chezmoi configuration
+# https://www.chezmoi.io/reference/configuration/
+
+# Encryption configuration (1Password)
+# Uncomment when 1Password CLI is installed and configured
+# [encryption]
+#     program = "1password"
+
+# Backup settings
+[diff]
+    pager = "delta"
+
+[apply]
+    backup = true
+    prompt = false
+
+# Source directory (where dotfiles are stored)
+# Default: ~/.local/share/chezmoi
+
+# Template options
+[templates]
+    delimiters = ["{{", "}}"]
