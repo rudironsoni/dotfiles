@@ -1,0 +1,115 @@
+# ~/.config/powershell/Microsoft.PowerShell_profile.ps1
+# Managed by chezmoi: https://chezmoi.io/
+# PowerShell 7+ profile
+
+# ============================================================================
+# PSReadLine Configuration
+# ============================================================================
+# Enable PSReadLine for better editing experience
+if (Get-Module -ListAvailable -Name PSReadLine) {
+    Import-Module PSReadLine
+    
+    # Set prediction source
+    Set-PSReadLineOption -PredictionSource History
+    
+    # Enable history search
+    Set-PSReadLineOption -HistorySearchCursorMovesToEnd
+    
+    # Enable bold for different colors
+    Set-PSReadLineOption -Colors @{ 
+        Comment = 'DarkGreen'
+        Keyword = 'DarkGreen'
+        String = 'DarkYellow'
+        Operator = 'DarkYellow'
+        Variable = 'White'
+        Command = 'Cyan'
+        Parameter = 'Cyan'
+        Type = 'Yellow'
+        Number = 'Magenta'
+    }
+    
+    # Key bindings
+    Set-PSReadLineKeyHandler -Key Up -Function HistorySearchBackward
+    Set-PSReadLineKeyHandler -Key Down -Function HistorySearchForward
+}
+
+# ============================================================================
+# Aliases
+# ============================================================================
+Set-Alias -Name ll -Value Get-ChildItem
+Set-Alias -Name la -Value Get-ChildItem -Option AllScope -ArgumentList @('-Force')
+Set-Alias -Name g -Value git
+Set-Alias -Name gs -Value git\ status
+Set-Alias -Name ga -Value git\ add
+Set-Alias -Name gc -Value git\ commit
+Set-Alias -Name gp -Value git\ push
+
+# ============================================================================
+# Prompt (Oh-My-Posh)
+# ============================================================================
+# Use Oh-My-Posh if available
+if (Get-Module -ListAvailable -Name oh-my-posh) {
+    Import-Module oh-my-posh
+    
+    # Set theme based on OS
+    $theme = "paradox"
+    {{- if eq .chezmoi.os "windows" }}
+    $theme = "avit"
+    {{- else if eq .chezmoi.os "darwin" }}
+    $theme = "crater"
+    {{- end }}
+    
+    Set-OhMyPoshTheme $theme
+}
+
+# ============================================================================
+# Environment Variables
+# ============================================================================
+# Set UTF-8 encoding
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+# XDG Base Directory
+$env:XDG_CONFIG_HOME = "$HOME/.config"
+$env:XDG_DATA_HOME = "$HOME/.local/share"
+$env:XDG_CACHE_HOME = "$HOME/.cache"
+
+# ============================================================================
+# Editor
+# ============================================================================
+if (-not $env:EDITOR) {
+    $env:EDITOR = "vim"
+}
+if (-not $env:VISUAL) {
+    $env:VISUAL = $env:EDITOR
+}
+
+# ============================================================================
+# Machine-Specific Configuration
+# ============================================================================
+{{- if eq .chezmoi.hostname "work-laptop" }}
+$env:WORK_ENV = "true"
+{{- else if eq .chezmoi.hostname "home-desktop" }}
+$env:HOME_ENV = "true"
+{{- end }}
+
+# ============================================================================
+# Functions
+# ============================================================================
+function which {
+    param ( [string]$Command )
+    Get-Command -Name $Command -ErrorAction SilentlyContinue |
+        Select-Object -ExpandProperty Source -ErrorAction SilentlyContinue
+}
+
+function .. { Set-Location .. }
+function ... { Set-Location ../.. }
+function .... { Set-Location ../../.. }
+
+# ============================================================================
+# Additional Configurations
+# ============================================================================
+# Source machine-specific profile if it exists
+$localProfile = "$HOME/.config/powershell/profile.local.ps1"
+if (Test-Path $localProfile) {
+    . $localProfile
+}

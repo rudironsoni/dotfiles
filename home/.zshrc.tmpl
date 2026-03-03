@@ -1,0 +1,159 @@
+# ~/.zshrc - Zsh configuration
+# Managed by chezmoi: https://chezmoi.io/
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# ============================================================================
+# History
+# ============================================================================
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt hist Reduce_blanks
+setopt share_history
+
+# ============================================================================
+# Autoload Utilities
+# ============================================================================
+autoload -Uz colors
+autoload -Uz compinit
+autoload -Uz promptinit
+
+# Initialize colors
+colors
+
+# ============================================================================
+# Completion
+# ============================================================================
+compinit
+# Case-insensitive completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+# Group completions by type
+zstyle ':completion:*' menu select
+zstyle ':completion:*' group-name ''
+# Show descriptions for completions
+zstyle ':completion:*:descriptions' format '%B%d%b'
+
+# ============================================================================
+# Paths
+# ============================================================================
+# Add homebrew to PATH on macOS
+{{- if eq .chezmoi.os "darwin" }}
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+{{- end }}
+
+# Add local bin to PATH
+export PATH="$HOME/.local/bin:$PATH"
+
+# Add node_modules/.bin to PATH (if exists)
+if [ -d "$HOME/node_modules/.bin" ]; then
+    export PATH="$HOME/node_modules/.bin:$PATH"
+fi
+
+# ============================================================================
+# Aliases
+# ============================================================================
+# General
+alias ll='ls -la'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Safety
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
+# Git
+alias g='git'
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+alias gl='git log --oneline --graph --decorate'
+
+# Utilities
+alias cat='bat'
+{{- if eq .chezmoi.os "darwin" }}
+alias ls='ls -G'
+{{- else }}
+alias ls='ls --color=auto'
+{{- end }}
+
+# ============================================================================
+# Prompt
+# ============================================================================
+# Use starship prompt if available
+if command -v starship &> /dev/null; then
+    eval "$(starship init zsh)"
+else
+    # Basic prompt
+    promptinit
+    prompt adam1
+fi
+
+# ============================================================================
+# Editor
+# ============================================================================
+export EDITOR={{ if exists "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
+export VISUAL="$EDITOR"
+
+# ============================================================================
+# Language and Locale
+# ============================================================================
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+# ============================================================================
+# Keybindings
+# ============================================================================
+# Use emacs keybindings (default is vi)
+bindkey -e
+
+# ============================================================================
+# Directory Navigation
+# ============================================================================
+# Auto-cd into directories
+setopt autocd
+# Correct cd typos
+setopt cdablevars
+# Pushd to home on empty cd
+setopt auto_pushd
+# Don't duplicate previous entries
+setopt pushd_ignore_dups
+
+# ============================================================================
+# Machine-Specific Configuration
+# ============================================================================
+{{- if eq .chezmoi.hostname "work-laptop" }}
+# Work-specific configuration
+export WORK_ENV=true
+alias workgit='git config user.email "work@example.com"'
+{{- else if eq .chezmoi.hostname "home-desktop" }}
+# Home-specific configuration
+export HOME_ENV=true
+alias homegit='git config user.email "home@example.com"'
+{{- end }}
+
+# ============================================================================
+# OS-Specific Configuration
+# ============================================================================
+{{- if eq .chezmoi.os "darwin" }}
+# macOS-specific
+export CLICOLOR=1
+alias update='brew update && brew upgrade'
+{{- else if eq .chezmoi.os "linux" }}
+# Linux-specific
+alias update='sudo apt update && sudo apt upgrade'
+{{- end }}
+
+# ============================================================================
+# Additional Configurations
+# ============================================================================
+# Source additional zsh configurations if they exist
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"

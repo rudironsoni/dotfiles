@@ -1,0 +1,67 @@
+# ~/.profile - POSIX profile
+# Managed by chezmoi: https://chezmoi.io/
+# This file is sourced by login shells (bash, zsh, sh)
+
+# ============================================================================
+# Paths
+# ============================================================================
+# Set PATH to include user's private bin if it exists
+if [ -d "$HOME/.local/bin" ]; then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
+# Add homebrew to PATH on macOS
+{{- if eq .chezmoi.os "darwin" }}
+if [ -d "/opt/homebrew/bin" ]; then
+    export PATH="/opt/homebrew/bin:$PATH"
+fi
+if [ -d "/opt/homebrew/sbin" ]; then
+    export PATH="/opt/homebrew/sbin:$PATH"
+fi
+{{- end }}
+
+# ============================================================================
+# Editor
+# ============================================================================
+if [ -z "$EDITOR" ]; then
+    export EDITOR="vim"
+fi
+if [ -z "$VISUAL" ]; then
+    export VISUAL="$EDITOR"
+fi
+
+# ============================================================================
+# Language and Locale
+# ============================================================================
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+# ============================================================================
+# XDG Base Directory
+# ============================================================================
+if [ -z "$XDG_CONFIG_HOME" ]; then
+    export XDG_CONFIG_HOME="$HOME/.config"
+fi
+if [ -z "$XDG_DATA_HOME" ]; then
+    export XDG_DATA_HOME="$HOME/.local/share"
+fi
+if [ -z "$XDG_CACHE_HOME" ]; then
+    export XDG_CACHE_HOME="$HOME/.cache"
+fi
+
+# ============================================================================
+# Additional Configurations
+# ============================================================================
+# Source machine-specific profile if it exists
+[ -f "$HOME/.profile.local" ] && . "$HOME/.profile.local"
+
+# Check for interactive shell and source appropriate config
+case "$-" in
+    *i*) 
+        # Interactive shell
+        ;;
+    *) 
+        # Non-interactive shell
+        return
+        ;;
+esac

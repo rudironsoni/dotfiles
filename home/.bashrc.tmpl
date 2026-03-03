@@ -1,0 +1,124 @@
+# ~/.bashrc - Bash configuration
+# Managed by chezmoi: https://chezmoi.io/
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# ============================================================================
+# History
+# ============================================================================
+HISTCONTROL=ignoreboth
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+# Append to history rather than overwriting
+shopt -s histappend
+# Check window size after each command
+shopt -s checkwinsize
+# Enable timed history
+HISTTIMEFORMAT="%F %T "
+export HISTIGNORE="ls:ps:exit"
+
+# ============================================================================
+# Paths
+# ============================================================================
+# Add homebrew to PATH on macOS
+{{- if eq .chezmoi.os "darwin" }}
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+{{- end }}
+
+# Add local bin to PATH
+export PATH="$HOME/.local/bin:$PATH"
+
+# Add node_modules/.bin to PATH (if exists)
+if [ -d "$HOME/node_modules/.bin" ]; then
+    export PATH="$HOME/node_modules/.bin:$PATH"
+fi
+
+# ============================================================================
+# Aliases
+# ============================================================================
+# General
+alias ll='ls -la'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Safety
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
+# Git
+alias g='git'
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+alias gl='git log --oneline --graph --decorate'
+
+# Utilities
+alias cat='bat'
+{{- if eq .chezmoi.os "darwin" }}
+alias ls='ls -G'
+{{- else }}
+alias ls='ls --color=auto'
+{{- end }}
+
+# ============================================================================
+# Prompt
+# ============================================================================
+# Use starship prompt if available
+if command -v starship &> /dev/null; then
+    eval "$(starship init bash)"
+else
+    # Basic prompt
+    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+fi
+
+# ============================================================================
+# Editor
+# ============================================================================
+export EDITOR={{ if exists "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
+export VISUAL="$EDITOR"
+
+# ============================================================================
+# Language and Locale
+# ============================================================================
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+# ============================================================================
+# Machine-Specific Configuration
+# ============================================================================
+{{- if eq .chezmoi.hostname "work-laptop" }}
+# Work-specific configuration
+export WORK_ENV=true
+alias workgit='git config user.email "work@example.com"'
+{{- else if eq .chezmoi.hostname "home-desktop" }}
+# Home-specific configuration
+export HOME_ENV=true
+alias homegit='git config user.email "home@example.com"'
+{{- end }}
+
+# ============================================================================
+# OS-Specific Configuration
+# ============================================================================
+{{- if eq .chezmoi.os "darwin" }}
+# macOS-specific
+export CLICOLOR=1
+alias update='brew update && brew upgrade'
+{{- else if eq .chezmoi.os "linux" }}
+# Linux-specific
+alias update='sudo apt update && sudo apt upgrade'
+{{- end }}
+
+# ============================================================================
+# Additional Configurations
+# ============================================================================
+# Source additional bash configurations if they exist
+[ -f "$HOME/.bashrc.local" ] && source "$HOME/.bashrc.local"
+
+# Load .profile if no shell-specific config exists
+[ -z "$BASH_VERSION" ] && [ -f "$HOME/.profile" ] && source "$HOME/.profile"
