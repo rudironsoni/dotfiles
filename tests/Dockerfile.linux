@@ -1,5 +1,5 @@
 # ==============================================================================
-# Docker Test Container - Linux
+# Docker Test Container - Linux (Fixed)
 # ==============================================================================
 # This Dockerfile is used to test the dotfiles bootstrap on a Linux environment
 #
@@ -23,34 +23,39 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     procps \
     unzip \
+    gpg \
+    gnupg \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Homebrew
-RUN \
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
-    echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /root/.profile && \
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-# Install chezmoi and 1Password CLI via brew
-RUN \
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && \
-    brew install chezmoi 1password-cli
-
-# Create test user (non-root for more realistic testing)
+# Create test user FIRST (before installing anything as non-root)
 RUN useradd -m -s /bin/bash testuser
-WORKDIR /home/testuser
+
+# Install chezmoi (works as root)
+RUN sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
+
+# Install 1Password CLI via apt (as root)
+RUN curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+    gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | \
+    tee /etc/apt/sources.list.d/1password.list && \
+    apt-get update && \
+    apt-get install -y 1password-cli
 
 # Copy bootstrap and test scripts
 COPY scripts/ /home/testuser/scripts/
 COPY tests/test-chezmoi.sh /home/testuser/tests/
 RUN chmod +x /home/testuser/scripts/*.sh /home/testuser/tests/*.sh
 
+# Set proper ownership
+RUN chown -R testuser:testuser /home/testuser
+
+# Switch to test user for remaining operations
+USER testuser
+WORKDIR /home/testuser
+
 # Set environment
 ENV HOME=/home/testuser
 ENV USER=testuser
-
-# Switch to test user
-USER testuser
 
 # Default command
 CMD ["bash"]
