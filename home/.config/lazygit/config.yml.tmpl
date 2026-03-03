@@ -1,0 +1,81 @@
+# lazygit configuration
+# Managed by chezmoi: https://chezmoi.io/
+# https://github.com/jesseduffield/lazygit/blob/master/docs/CONFIG.md
+
+# User interface
+gui:
+  # Theme
+  theme:
+    activeBorderColor:
+      - green
+    inactiveBorderColor:
+      - white
+    selectedLineBgColor:
+      - blue
+    selectedRangeBgColor:
+      - blue
+
+  # Refresh interval (ms)
+  refreshInterval: 100
+  
+  # Side panel width (0-100)
+  sidePanelWidth: 0.2
+  
+  # Split diff view
+  splitDiff: auto
+
+# Commands
+commands:
+  # Custom commands
+  - key: 'f'
+    description: 'Fetch all'
+    command: 'git fetch --all'
+    prompts:
+      - key: 'confirm'
+        title: 'Run git fetch?'
+        initialValue: true
+
+# Custom menus
+customCommands:
+  # Example custom menu
+  - key: 'r'
+    name: 'Rebase interactive'
+    command: 'git rebase -i HEAD~{{.Form.SelectedLocalCommits}}'
+    context: 'commits'
+
+# Git flow
+git:
+  # Padding between commits
+  commitPrefix: ''
+  
+  # Side-by-side diff
+  splitDiff: auto
+  
+  # Show diff refresh spinner
+  showDiffSpinner: true
+  
+  # Skip staged submodules
+  skipStagedSubmodules: false
+
+# Notifications
+notifications:
+  # Sound
+  sound: true
+  
+  # Fade out duration (ms)
+  fadeOutDuration: 5000
+
+# OS-specific configuration
+{{- if eq .chezmoi.os "darwin" }}
+# macOS-specific
+gui:
+  theme:
+    selectedLineBgColor:
+      - cyan
+{{- else if eq .chezmoi.os "linux" }}
+# Linux-specific
+gui:
+  theme:
+    selectedLineBgColor:
+      - blue
+{{- end }}

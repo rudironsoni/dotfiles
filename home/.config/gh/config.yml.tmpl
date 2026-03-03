@@ -1,0 +1,31 @@
+# GitHub CLI configuration
+# Managed by chezmoi: https://chezmoi.io/
+# https://cli.github.com/manual/
+
+git_protocol: https
+
+# Editor
+exitor: {{ if exists "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
+
+# Pager
+pager: {{ if executable "delta" }}"delta"{{ else }}"cat"{{ end }}
+
+# Aliases
+aliases:
+  co: checkout
+  cr: create repo
+  ls: repo list
+  pl: pull
+  ps: push
+  br: branch
+
+# gh auth status
+# Run `gh auth login` to authenticate
+
+# Default repository owner
+{{- if eq .chezmoi.hostname "work-laptop" }}
+# Work-specific settings
+{{- end }}
+
+# Note: Sensitive data like personal access tokens should not be stored here
+# Use `gh auth status` to check authentication

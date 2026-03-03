@@ -1,0 +1,83 @@
+# topgrade configuration
+# Managed by chezmoi: https://chezmoi.io/
+# https://github.com/topgrade-rs/topgrade/blob/main/docs/configuration.md
+
+# Runner configuration
+[runners]
+  # Enable pre-install checks
+  pre_install_commands = true
+  
+  # Enable post-upgrade commands
+  post_upgrade_commands = true
+
+# Update categories to run
+[categories]
+  # Enable/disable specific updaters
+  brew = true
+  cargo = true
+  choco = true
+  choom = true
+  conan = true
+  container = true
+  crystal = true
+  dnf = true
+  elan = true
+  flatpak = true
+  gem = true
+  go = true
+  cargo = true
+  haskell = true
+  hex = true
+  homebrew = true
+  linux_system = true
+  mas = true
+  npm = true
+  pearl = true
+  pip = true
+  pip3 = true
+  rbtx = true
+  remix = true
+  rustup = true
+  scoop = true
+  sheldon = true
+  snap = true
+  spm = true
+  steam = true
+  system = true
+  tldr = true
+  vcpkg = true
+  yarn = true
+
+# Git configuration
+git:
+  # Pull repositories before upgrading
+  pull_preference = "fetch"
+  
+  # Only show pending upgrades
+  skip_pull = false
+
+# Logging
+[log]
+  # Log level (trace, debug, info, warn, error)
+  level = "info"
+  
+  # Log file
+  file = "{{ .chezmoi.homeDir }}/.local/share/topgrade/topgrade.log"
+
+# Remote repositories
+# [remote_repos]
+#   "https://github.com/user/repo.git"
+
+# Specific configurations for different platforms
+{{- if eq .chezmoi.os "darwin" }}
+[brew]
+  # Force brew to upgrade
+  force = true
+  
+  # Upgrade casks
+  upgrade_casks = true
+{{- else if eq .chezmoi.os "linux" }}
+[linux_system]
+  # Distribution-specific commands
+  distribution = "auto"
+{{- end }}

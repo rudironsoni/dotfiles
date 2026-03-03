@@ -1,0 +1,151 @@
+# Git configuration
+# Managed by chezmoi: https://chezmoi.io/
+# https://git-scm.com/docs/git-config
+
+[user]
+    # Email and name - can be overridden per machine
+    email = "{{ .chezmoi.username }}@example.com"
+    name = "{{ .chezmoi.username }}"
+
+[core]
+    # Editor
+    editor = {{ if exists "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
+    
+    # Whitespace
+    whitespace = "fix"
+    
+    # Default pull strategy
+    pull = rebase
+    
+    # Autosetup configuration
+    autosetupmerge = true
+    autosetuprebase = always
+
+[init]
+    defaultBranch = main
+
+[color]
+    ui = auto
+
+[alias]
+    # Shortcuts
+    s = status
+    a = add
+    c = commit
+    p = push
+    l = log
+    d = diff
+    b = branch
+    co = checkout
+    cb = checkout -b
+    
+    # Enhanced logging
+    lg = log --graph --oneline --decorate --all
+    last = log -1 HEAD --stat
+    
+    # Staging
+    unstage = reset HEAD --
+    
+    # Working directory
+    undone = reset --soft HEAD~1
+    amend = commit --amend --no-edit
+
+[diff]
+    # Use delta if available (enhanced diff viewer)
+    {{- if executable "delta" }}
+    pager = delta
+    {{- else }}
+    pager = diff
+    {{- end }}
+    
+    # Mnemonic prefixes
+    mnemonicPrefix = true
+    
+    # Refresh index
+    refresh = true
+
+[diff "bin\]
+    # Binary files
+    binary = true
+
+[merge]
+    # Auto-merges
+    tool = vimdiff
+    
+    # Commit message for conflicts
+    conflictstyle = merge
+
+[mergetool "vimdiff\]
+    cmd = vim -d "$MERGED" "$LOCAL" "$BASE" "$REMOTE"
+    trustExitCode = true
+
+[pull]
+    rebase = true
+
+[push]
+    # Push current branch to same name on remote
+    default = current
+    
+    # Auto-follow renames
+    followTags = true
+    
+    # Require upstream
+    {{- if eq .chezmoi.hostname "work-laptop" }}
+    default = upstream
+    {{- end }}
+
+[fetch]
+    # Prune deleted refs
+    prune = true
+    pruneTags = true
+
+[rebase]
+    # Auto-stash
+    autoStash = true
+    
+    # Auto-interactive
+    autoInteractive = true
+
+[status]
+    # Show untracked files as directories
+    showUntrackedFiles = normal
+    
+    # Short format
+    short = false
+
+[branch]
+    # Auto-setup
+    autoSetupMerge = true
+    autoSetupRebase = always
+
+[tag]
+    # Sort by version
+    sort = version:refname
+
+[help]
+    # Format
+    format = man
+
+[credential "https://github.com"]
+    # Use GitHub CLI for authentication
+    helper = !gh auth git-credential
+
+[credential "https://gist.github.com"]
+    helper = !gh auth git-credential
+
+{{- if eq .chezmoi.os "darwin" }}
+# macOS-specific
+[credential "https://github.com"]
+    helper = !git-credential-osxkeychain
+{{- end }}
+
+# ============================================================================
+# Conditional includes for different machines
+# ============================================================================
+{{- if eq .chezmoi.hostname "work-laptop" }}
+[includeIf "gitconfig:work/"]
+    path = ~/.gitconfig.work
+{{- else if eq .chezmoi.hostname "home-desktop" }}
+[includeIf "gitconfig:home/"]
+    path = ~/.gitconfig.home
+{{- end }}
