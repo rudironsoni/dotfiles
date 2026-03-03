@@ -1,0 +1,99 @@
+{
+    // VS Code User Settings
+    // Managed by chezmoi: https://chezmoi.io/
+    // Customize these settings for your preferences
+
+    // Editor settings
+    "editor.fontSize": 14,
+    "editor.fontFamily": "'Fira Code', 'JetBrains Mono', monospace",
+    "editor.fontLigatures": true,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": true,
+    "editor.trimAutoWhitespace": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.minimap.enabled": true,
+    "editor.cursorBlinking": "smooth",
+    "editor.smoothScrolling": true,
+    "editor.padding": { "top": 10, "bottom": 10 },
+
+    // Files
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.associations": {
+        "*.json": "jsonc",
+        "*.tf": "hcl",
+        "*.tpl": "template"
+    },
+
+    // Workbench
+    "workbench.colorTheme": "Default Dark+",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.startupEditor": "welcomePage",
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.closeOnFileDelete": true,
+
+    // Terminal
+    "terminal.integrated.fontSize": 13,
+    "terminal.integrated.fontFamily": "'Fira Code', monospace",
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.shell.linux": "{{- if exists "$SHELL" }}{{ trim (output "cat" "$SHELL") }}{{ else }}"/bin/bash"{{ end }}",
+    "terminal.integrated.defaultProfile.linux": "bash",
+
+    {{- if eq .chezmoi.os "darwin" }}
+    "terminal.integrated.shell.osx": "/bin/zsh",
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    {{- end }}
+
+    // Git
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+    "git.enableCommitSigning": false,
+    "git.decorations.enabled": true,
+
+    // Extensions
+    "extensions.autoUpdate": true,
+    "extensions.ignoreRecommendations": false,
+
+    // Search
+    "search.useGlobalIgnoreFiles": true,
+    "search.followSymlinks": false,
+
+    // Telemetry
+    "telemetry.enableTelemetry": false,
+    "telemetry.enableCrashReporter": false,
+
+    // Updates
+    "update.mode": "manual",
+    "update.showReleaseNotes": false,
+
+    // Python (if installed)
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.formatting.provider": "black",
+
+    // JSON
+    "json.format.enable": true,
+    "json.schemas": [],
+
+    // Docker
+    "docker.dockerPath": "docker",
+    "docker.dockerComposePath": "docker-compose",
+
+    // Remote
+    "remote.SSH.showLoginTerminal": true,
+
+    // Debug
+    "debug.console.fontSize": 13,
+    "debug.inlineValues": true,
+
+    // Other
+    "security.workspace.trust.enabled": true,
+    "remoteHub.accounts": []
+}
