@@ -46,7 +46,7 @@ customCommands:
   # Example custom menu
   - key: 'r'
     name: 'Rebase interactive'
-    command: 'git rebase -i HEAD~{{.Form.SelectedLocalCommits}}'
+    command: 'git rebase -i HEAD~{{ `{{.Form.SelectedLocalCommits}}` }}'
     context: 'commits'
 
 # Git flow
