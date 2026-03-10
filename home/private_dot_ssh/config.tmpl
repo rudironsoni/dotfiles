@@ -87,7 +87,7 @@ Host aws-*
     HostName {{ .chezmoi.hostname }}.amazonaws.com
     User ec2-user
     # IdentityFile from 1Password:
-    # {{- if executable "op" }}
+    # {{- if lookPath "op" }}
     # {{- $key := output "op" "item" "aws-ssh-key" "--field" "private_key" }}
     # {{- end }}
     # Uncomment below and use specific key path:
