@@ -1,0 +1,61 @@
+# Ripgrep configuration file
+# Managed by chezmoi
+# Documentation: https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file
+
+# Search hidden files by default
+--hidden
+
+# Follow symlinks
+--follow
+
+# Smart case (case insensitive unless pattern contains uppercase)
+--smart-case
+
+# Enable colors
+--color=auto
+
+# Output line numbers
+--line-number
+
+# Output column numbers
+--column
+
+# Show 2 lines of context
+--context=2
+
+# Max columns to display (truncate long lines)
+--max-columns=150
+
+# Max columns preview (for previews)
+--max-columns-preview
+
+# Pretty output with headings
+--heading
+
+# Group results by file
+--group
+
+# Use the global gitignore file
+--glob=!.git/
+
+# Ignore patterns (common directories)
+--glob=!.git/**
+--glob=!node_modules/**
+--glob=!vendor/**
+--glob=!__pycache__/
+--glob=!*.egg-info/
+--glob=!target/           # Rust
+--glob=!build/            # Build directories
+--glob=!dist/             # Distribution directories
+--glob=!.next/            # Next.js
+--glob=!coverage/         # Test coverage
+--glob=!.idea/            # JetBrains
+--glob=!.vscode/          # VS Code
+--glob=!.env*             # Environment files
+--glob=!*.min.js          # Minified files
+--glob=!*.min.css
+
+# Type definitions (add custom types)
+--type-add=web:*.{html,css,scss,sass,less,js,ts,jsx,tsx,vue,svelte}
+--type-add=config:*.{json,yaml,yml,toml,ini,conf,config}
+--type-add=doc:*.{md,mdx,rst,txt}

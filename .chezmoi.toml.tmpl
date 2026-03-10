@@ -18,7 +18,11 @@
     name = {{ $name | quote }}
     is_wsl = {{ env "WSL_DISTRO_NAME" | not | not }}
     is_codespace = {{ env "CODESPACES" | not | not }}
+    is_container = {{ env "CONTAINER_ID" | not | not }}
+    is_devcontainer = {{ stat "/.devcontainer" | not | not }}
     has_1password = {{ lookPath "op" | not | not }}
+    has_docker = {{ lookPath "docker" | not | not }}
+    has_kubectl = {{ lookPath "kubectl" | not | not }}
 
 # Encryption configuration (1Password)
 # Uncomment when 1Password CLI is installed and configured
