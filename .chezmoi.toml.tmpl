@@ -1,0 +1,38 @@
+# chezmoi configuration template
+# https://www.chezmoi.io/reference/configuration/
+
+# Auto-detect from git config
+{{- $email := "" }}
+{{- $name := "" }}
+{{- if lookPath "git" }}
+{{-   $email = output "git" "config" "--global" "user.email" | trim }}
+{{-   $name = output "git" "config" "--global" "user.name" | trim }}
+{{- end }}
+
+# Prompt if empty
+{{- if eq $email "" }}{{ $email = promptString "Git email address" }}{{ end }}
+{{- if eq $name "" }}{{ $name = promptString "Git user name" }}{{ end }}
+
+[data]
+    email = {{ $email | quote }}
+    name = {{ $name | quote }}
+    is_wsl = {{ env "WSL_DISTRO_NAME" | not | not }}
+    is_codespace = {{ env "CODESPACES" | not | not }}
+    has_1password = {{ lookPath "op" | not | not }}
+
+# Encryption configuration (1Password)
+# Uncomment when 1Password CLI is installed and configured
+# [encryption]
+#     program = "1password"
+
+# Backup settings
+[diff]
+    pager = "delta"
+
+[apply]
+    backup = true
+    prompt = false
+
+# Template options
+[templates]
+    delimiters = ["{{", "}}"]
