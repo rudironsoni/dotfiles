@@ -1,5 +1,6 @@
-# Chezmoi local files
-.chezmoi*
+# Chezmoi local files (machine-specific state)
+.chezmoi.toml
+.chezmoi.toml.bak
 *.local
 
 # OS-specific secrets (never commit)

@@ -1,0 +1,29 @@
+# Chezmoi ignore patterns
+# https://www.chezmoi.io/reference/special-files/chezmoiignore/
+
+# OS-specific exclusions
+{{- if eq .chezmoi.os "darwin" }}
+# macOS - exclude Linux-specific files
+dot_config/powershell/**
+{{- end }}
+
+{{- if eq .chezmoi.os "linux" }}
+# Linux - exclude macOS-specific files
+# (none currently)
+{{- end }}
+
+{{- if eq .chezmoi.os "windows" }}
+# Windows - exclude Unix-specific files
+dot_bashrc.tmpl
+dot_zshrc.tmpl
+dot_profile.tmpl
+dot_config/fish/**
+dot_config/tmux/**
+dot_config/topgrade/**
+private_dot_ssh/**
+{{- end }}
+
+# Machine-specific exclusions can be added here
+# {{- if ne .chezmoi.hostname "work-laptop" }}
+# dot_config/work-specific/**
+# {{- end }}

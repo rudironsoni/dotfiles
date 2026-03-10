@@ -5,7 +5,7 @@
 git_protocol: https
 
 # Editor
-exitor: {{ if exists "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
+editor: {{ if exists "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
 
 # Pager
 pager: {{ if executable "delta" }}"delta"{{ else }}"cat"{{ end }}
