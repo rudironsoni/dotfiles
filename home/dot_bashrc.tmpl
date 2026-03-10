@@ -80,7 +80,7 @@ fi
 # ============================================================================
 # Editor
 # ============================================================================
-export EDITOR={{ if exists "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
+export EDITOR={{ if stat "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
 export VISUAL="$EDITOR"
 
 # ============================================================================

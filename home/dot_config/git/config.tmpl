@@ -9,7 +9,7 @@
 
 [core]
     # Editor
-    editor = {{ if exists "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
+    editor = {{ if stat "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
     
     # Whitespace
     whitespace = "fix"
@@ -52,7 +52,7 @@
 
 [diff]
     # Use delta if available (enhanced diff viewer)
-    {{- if executable "delta" }}
+    {{- if lookPath "delta" }}
     pager = delta
     {{- else }}
     pager = diff
@@ -64,7 +64,7 @@
     # Refresh index
     refresh = true
 
-[diff "bin\]
+[diff "bin"]
     # Binary files
     binary = true
 
@@ -75,7 +75,7 @@
     # Commit message for conflicts
     conflictstyle = merge
 
-[mergetool "vimdiff\]
+[mergetool "vimdiff"]
     cmd = vim -d "$MERGED" "$LOCAL" "$BASE" "$REMOTE"
     trustExitCode = true
 

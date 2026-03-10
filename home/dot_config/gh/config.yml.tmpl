@@ -5,10 +5,10 @@
 git_protocol: https
 
 # Editor
-editor: {{ if exists "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
+editor: {{ if stat "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
 
 # Pager
-pager: {{ if executable "delta" }}"delta"{{ else }}"cat"{{ end }}
+pager: {{ if lookPath "delta" }}"delta"{{ else }}"cat"{{ end }}
 
 # Aliases
 aliases:
