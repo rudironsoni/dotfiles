@@ -27,3 +27,7 @@ id_*
 # Test artifacts
 test-output/
 *.log
+
+# Worktrees
+.worktrees/
+worktrees/
