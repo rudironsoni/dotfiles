@@ -32,3 +32,6 @@ test-output/
 # Worktrees
 .worktrees/
 worktrees/
+
+# Tool state directories
+.serena/
