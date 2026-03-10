@@ -1,0 +1,145 @@
+# Btop configuration
+# Managed by chezmoi
+# https://github.com/aristocratos/btop
+
+# Main theme, look for themes in ~/.config/btop/themes
+# Default is "Default"
+theme = "one-dark"
+
+# Set to True if main theme is "translucent"
+# This allows for transparent background if the terminal supports it
+truecolor = True
+
+# Set to True to force tty mode (no colors, no mouse, simple output)
+force_tty = False
+
+# Set to True to force 256 colors (for terminals that don't report colors correctly)
+force_256color = False
+
+# Set to True to force bold text
+force_bold = False
+
+# Set the redraw frequency in ms (milliseconds)
+# Lower = more CPU usage, Higher = slower updates
+# Minimum 100ms, Maximum 10000ms (10s)
+update_ms = 1000
+
+# List of named layouts to cycle through with "l"
+# Possible values: full, proc, cpu, mem, net, disk
+check_temp = True
+
+# Draw a clock at top of screen
+draw_clock = True
+
+# Update the clock even if terminal is idle
+clock_format = "%X"
+
+# Draw a custom box around the menu
+draw_custom_box = False
+
+# Show the current network interface at the top
+show_net_iface = True
+
+# Show battery stats in the lower right corner (if battery is present)
+show_battery = True
+
+# Show the current disk stats at the top
+disks_filter = ""
+
+# Set to True to enable vim keys in help menu and process selection
+vim_keys = True
+
+# Set to True to reverse the direction of the memory graph
+mem_graphs = True
+
+# Show proc box (processes and cpu)
+proc_left = False
+
+# Filter out processes with less than 0.1% cpu usage in process box
+proc_filter_kernel = False
+
+# Sort processes by "cpu", "mem", "pid", "program", "thread", "user"
+proc_sorting = "cpu"
+
+# Reverse the sorting order in process box
+proc_reversed = False
+
+# Tree view in process box
+proc_tree = False
+
+# Show the number of threads for each process in the process box
+proc_colors = True
+
+# Use gradient on process lines in process box
+proc_gradient = True
+
+# If process cpu usage should be of the core it's running on or the total cpu usage
+proc_per_core = False
+
+# Show process memory usage in percent of total memory
+proc_mem_bytes = True
+
+# Show cpu temperature
+cpu_temp = True
+
+# Show the average load for the cpu
+cpu_graph_lower = "default"
+cpu_graph_upper = "default"
+cpu_invert_lower = True
+cpu_invert_upper = True
+cpu_single_graph = False
+cpu_bottom = False
+
+# Show mem box
+show_mem = True
+
+# Show mem values in bytes instead of percent
+mem_use_bytes = False
+
+# Show mem graphs as a single graph
+mem_graphs = True
+
+# Show mem graph stacked (uses more CPU)
+mem_graph_lower = "default"
+mem_graph_upper = "default"
+mem_invert_lower = True
+mem_invert_upper = True
+mem_single_graph = False
+
+# Show net box
+show_net = True
+
+# Show the network graphs stacked (uses more CPU)
+net_graph_lower = "default"
+net_graph_upper = "default"
+net_invert_lower = True
+net_invert_upper = True
+net_sync = False
+
+# Show the current disk read/write stats
+disk_free = True
+disk_free_priv = False
+disk_graph_lower = "default"
+disk_graph_upper = "default"
+disk_invert_lower = True
+disk_invert_upper = True
+disk_single_graph = False
+
+# Enable the battery box
+battery = True
+
+# Show the battery in percent
+battery_percent = True
+
+# Show battery time remaining
+battery_time = True
+
+# Set custom colors for cpu graph
+cpu_core_1 = "#61AFEF"
+cpu_core_2 = "#C678DD"
+cpu_core_3 = "#98C379"
+cpu_core_4 = "#E5C07B"
+cpu_core_5 = "#D19A66"
+cpu_core_6 = "#E06C75"
+cpu_core_7 = "#56B6C2"
+cpu_core_8 = "#ABB2BF"

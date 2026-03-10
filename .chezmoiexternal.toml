@@ -1,0 +1,105 @@
+# External Dependencies for chezmoi
+# https://www.chezmoi.io/reference/special-files/chezmoiexternal/
+#
+# These repositories are cloned/managed by chezmoi, not committed to the dotfiles repo.
+# Run `chezmoi apply` to update them.
+
+# ============================================================================
+# TPM-Redux (Tmux Plugin Manager - Fork with improvements)
+# https://github.com/RyanMacG/tpm-redux
+# ============================================================================
+[".config/tmux/plugins/tpm-redux"]
+    type = "git-repo"
+    url = "https://github.com/RyanMacG/tpm-redux"
+    refreshPeriod = "168h"  # Refresh weekly
+
+# ============================================================================
+# Tmux Plugins
+# ============================================================================
+
+# Sensible defaults for tmux
+[".config/tmux/plugins/tmux-sensible"]
+    type = "git-repo"
+    url = "https://github.com/tmux-plugins/tmux-sensible"
+    refreshPeriod = "168h"
+
+# Yank to system clipboard
+[".config/tmux/plugins/tmux-yank"]
+    type = "git-repo"
+    url = "https://github.com/tmux-plugins/tmux-yank"
+    refreshPeriod = "168h"
+
+# Interactive menus for tmux
+[".config/tmux/plugins/tmux-menus"]
+    type = "git-repo"
+    url = "https://github.com/jaclu/tmux-menus"
+    refreshPeriod = "168h"
+
+# Tmux logging
+[".config/tmux/plugins/tmux-logging"]
+    type = "git-repo"
+    url = "https://github.com/tmux-plugins/tmux-logging"
+    refreshPeriod = "168h"
+
+# Resurrect - save and restore tmux sessions
+[".config/tmux/plugins/tmux-resurrect"]
+    type = "git-repo"
+    url = "https://github.com/tmux-plugins/tmux-resurrect"
+    refreshPeriod = "168h"
+
+# Continuum - automatic saving and startup
+[".config/tmux/plugins/tmux-continuum"]
+    type = "git-repo"
+    url = "https://github.com/tmux-plugins/tmux-continuum"
+    refreshPeriod = "168h"
+
+# ============================================================================
+# Optional: Oh My Zsh
+# Uncomment if you want to use Oh My Zsh
+# ============================================================================
+# [".oh-my-zsh"]
+#     type = "git-repo"
+#     url = "https://github.com/ohmyzsh/ohmyzsh.git"
+#     refreshPeriod = "168h"
+#     clone.args = ["--depth", "1"]
+
+# ============================================================================
+# Optional: Powerlevel10k Theme (for Oh My Zsh)
+# ============================================================================
+# [".oh-my-zsh/custom/themes/powerlevel10k"]
+#     type = "git-repo"
+#     url = "https://github.com/romkatv/powerlevel10k.git"
+#     refreshPeriod = "168h"
+#     clone.args = ["--depth", "1"]
+
+# ============================================================================
+# Optional: Zsh Plugins (without Oh My Zsh)
+# ============================================================================
+# [".config/zsh/plugins/zsh-autosuggestions"]
+#     type = "git-repo"
+#     url = "https://github.com/zsh-users/zsh-autosuggestions"
+#     refreshPeriod = "168h"
+#
+# [".config/zsh/plugins/zsh-syntax-highlighting"]
+#     type = "git-repo"
+#     url = "https://github.com/zsh-users/zsh-syntax-highlighting"
+#     refreshPeriod = "168h"
+#
+# [".config/zsh/plugins/zsh-completions"]
+#     type = "git-repo"
+#     url = "https://github.com/zsh-users/zsh-completions"
+#     refreshPeriod = "168h"
+#
+# [".config/zsh/plugins/fzf-tab"]
+#     type = "git-repo"
+#     url = "https://github.com/Aloxaf/fzf-tab"
+#     refreshPeriod = "168h"
+
+# ============================================================================
+# Optional: Neovim Plugin Manager (lazy.nvim)
+# ============================================================================
+# [".config/nvim/lazy.nvim"]
+#     type = "git-repo"
+#     url = "https://github.com/folke/lazy.nvim"
+#     refreshPeriod = "168h"
+#     clone.args = ["--filter=blob:none"]

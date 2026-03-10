@@ -23,6 +23,26 @@ dot_config/topgrade/**
 private_dot_ssh/**
 {{- end }}
 
+# Container-specific exclusions
+{{- if or .is_container .is_devcontainer }}
+# Skip local development configs in containers
+dot_claude/hooks/**
+dot_claude/scripts/**
+{{- end }}
+
+# Codespaces-specific exclusions
+{{- if .is_codespace }}
+# Codespaces has pre-installed tools
+dot_config/Code/User/settings.json.tmpl
+dot_config/Code/User/keybindings.json.tmpl
+{{- end }}
+
+# WSL-specific exclusions
+{{- if .is_wsl }}
+# WSL uses Windows SSH agent
+dot_config/ssh-agent/**
+{{- end }}
+
 # Machine-specific exclusions can be added here
 # {{- if ne .chezmoi.hostname "work-laptop" }}
 # dot_config/work-specific/**

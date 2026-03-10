@@ -1,0 +1,65 @@
+#!/bin/bash
+# Package installation script for macOS
+# Runs once before any files are applied
+# https://www.chezmoi.io/reference/special-files/chezmoiscripts/
+
+set -euo pipefail
+
+echo "=== Installing packages for macOS ==="
+
+# Check if Homebrew is installed
+if ! command -v brew &> /dev/null; then
+    echo "Homebrew not found. Installing..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    # Add Homebrew to PATH for this session
+    if [[ -f /opt/homebrew/bin/brew ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -f /usr/local/bin/brew ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
+fi
+
+echo "Updating Homebrew..."
+brew update
+
+# Define packages to install
+PACKAGES=(
+    # Core tools
+    chezmoi
+    git
+    curl
+    wget
+    # Shell tools
+    zsh
+    bash
+    fish
+    oh-my-posh
+    # Terminal tools
+    tmux
+    fzf
+    ripgrep
+    fd
+    bat
+    eza
+    btop
+    # Development tools
+    gh
+    lazygit
+    # Secrets management
+    1password-cli
+    # Optional: Neovim
+    # neovim
+)
+
+echo "Installing packages: ${PACKAGES[*]}"
+for package in "${PACKAGES[@]}"; do
+    if brew list "$package" &> /dev/null; then
+        echo "  ✓ $package already installed"
+    else
+        echo "  → Installing $package..."
+        brew install "$package" || echo "  ⚠ Failed to install $package (may be optional)"
+    fi
+done
+
+echo "=== macOS package installation complete ==="
