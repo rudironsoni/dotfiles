@@ -227,7 +227,7 @@ export GITHUB_MCP_TOKEN={{ output "op" "read" "op://Personal/GitHub MCP Token/cr
 export GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_MCP_TOKEN}
 
 # Synthetic API Key
-export SYNTHETIC_API_KEY={{ output "op" "read" "op://Personal/Synthetic API Key/credential" | trim | quote }}
+export SYNTHETIC_API_KEY={{ output "op" "read" "op://vault-prd/Synthetic API Key/credential" | trim | quote }}
 export ANTHROPIC_AUTH_TOKEN=${SYNTHETIC_API_KEY}
 
 # Anthropic API Base URL

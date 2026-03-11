@@ -188,14 +188,23 @@ Create these items in your Personal vault:
 
 | Item Name | Field | Purpose |
 |-----------|-------|---------|
+| `Service Account Token` | `credential` | 1Password service account for automation |
 | `GitHub MCP Token` | `credential` | GitHub Personal Access Token for MCP |
-| `Synthetic API Key` | `credential` | API key for synthetic.new Anthropic proxy |
+| `Synthetic API Key` | `credential` | API key for synthetic.new Anthropic proxy (in vault-prd) |
 
 **Setup commands:**
 
 ```bash
+# Service Account Token (for automation - see 1Password service accounts)
+# Create at: https://my.1password.com/developer-tools/service-accounts
+# Then store the token:
+op item create --category="API Credential" --title="Service Account Token" --vault="Private" credential="ops_xxxxxxxxxxxxxxxx"
+
+# GitHub MCP Token
 op item create --category="API Credential" --title="GitHub MCP Token" --vault="Private" credential="ghp_xxxxxxxxxxxxxxxx"
-op item create --category="API Credential" --title="Synthetic API Key" --vault="Private" credential="syn_xxxxxxxxxxxxxxxx"
+
+# Synthetic API Key (store in vault-prd vault)
+op item create --category="API Credential" --title="Synthetic API Key" --vault="vault-prd" credential="syn_xxxxxxxxxxxxxxxx"
 ```
 
 ### Using Secrets in Templates
