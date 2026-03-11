@@ -276,15 +276,15 @@ print_summary() {
             case "$result" in
                 PASS)
                     printf "  ${GREEN}%-10s${NC} %s\n" "$distro" "✓ PASSED"
-                    ((pass_count++))
+                    pass_count=$((pass_count + 1))
                     ;;
                 FAIL)
                     printf "  ${RED}%-10s${NC} %s\n" "$distro" "✗ FAILED"
-                    ((fail_count++))
+                    fail_count=$((fail_count + 1))
                     ;;
                 BUILD_FAIL)
                     printf "  ${RED}%-10s${NC} %s\n" "$distro" "✗ BUILD FAILED"
-                    ((fail_count++))
+                    fail_count=$((fail_count + 1))
                     ;;
                 *)
                     printf "  ${YELLOW}%-10s${NC} %s\n" "$distro" "- SKIPPED"
