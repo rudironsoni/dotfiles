@@ -15,7 +15,7 @@ HISTSIZE=10000
 SAVEHIST=10000
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
-setopt hist Reduce_blanks
+setopt hist_reduce_blanks
 setopt share_history
 
 # ============================================================================
@@ -28,10 +28,12 @@ autoload -Uz promptinit
 # Initialize colors
 colors
 
+# Initialize completion
+compinit
+
 # ============================================================================
 # Completion
 # ============================================================================
-compinit
 # Case-insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 # Group completions by type
@@ -41,20 +43,85 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*:descriptions' format '%B%d%b'
 
 # ============================================================================
-# Paths
+# Homebrew
 # ============================================================================
-# Add homebrew to PATH on macOS
 {{- if eq .chezmoi.os "darwin" }}
+# macOS Homebrew
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+{{- else }}
+# Linuxbrew
+if [[ -d /home/linuxbrew/.linuxbrew ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 {{- end }}
 
-# Add local bin to PATH
+# ============================================================================
+# Node Version Manager (NVM)
+# ============================================================================
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# ============================================================================
+# Bun
+# ============================================================================
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# ============================================================================
+# pnpm
+# ============================================================================
+export PNPM_HOME="$HOME/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
+# ============================================================================
+# opencode
+# ============================================================================
+export PATH="$HOME/.opencode/bin:$PATH"
+
+# ============================================================================
+# Local bin
+# ============================================================================
 export PATH="$HOME/.local/bin:$PATH"
 
-# Add node_modules/.bin to PATH (if exists)
-if [ -d "$HOME/node_modules/.bin" ]; then
-    export PATH="$HOME/node_modules/.bin:$PATH"
-fi
+# ============================================================================
+# Editor
+# ============================================================================
+export EDITOR={{ if stat "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
+export VISUAL="$EDITOR"
+
+# ============================================================================
+# Language and Locale
+# ============================================================================
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+# ============================================================================
+# Prompt
+# ============================================================================
+promptinit
+prompt adam1
+
+# ============================================================================
+# Keybindings
+# ============================================================================
+# Use emacs keybindings (default is vi)
+bindkey -e
+
+# ============================================================================
+# Directory Navigation
+# ============================================================================
+# Auto-cd into directories
+setopt autocd
+# Correct cd typos
+setopt cdablevars
+# Pushd to home on empty cd
+setopt auto_pushd
+# Don't duplicate previous entries
+setopt pushd_ignore_dups
 
 # ============================================================================
 # Aliases
@@ -86,61 +153,6 @@ alias ls='ls --color=auto'
 {{- end }}
 
 # ============================================================================
-# Prompt
-# ============================================================================
-# Use Oh My Posh prompt if available
-if command -v oh-my-posh &> /dev/null; then
-    eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/config.json)"
-else
-    # Basic prompt
-    promptinit
-    prompt adam1
-fi
-
-# ============================================================================
-# Editor
-# ============================================================================
-export EDITOR={{ if stat "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
-export VISUAL="$EDITOR"
-
-# ============================================================================
-# Language and Locale
-# ============================================================================
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
-# ============================================================================
-# Keybindings
-# ============================================================================
-# Use emacs keybindings (default is vi)
-bindkey -e
-
-# ============================================================================
-# Directory Navigation
-# ============================================================================
-# Auto-cd into directories
-setopt autocd
-# Correct cd typos
-setopt cdablevars
-# Pushd to home on empty cd
-setopt auto_pushd
-# Don't duplicate previous entries
-setopt pushd_ignore_dups
-
-# ============================================================================
-# Machine-Specific Configuration
-# ============================================================================
-{{- if eq .chezmoi.hostname "work-laptop" }}
-# Work-specific configuration
-export WORK_ENV=true
-alias workgit='git config user.email "work@example.com"'
-{{- else if eq .chezmoi.hostname "home-desktop" }}
-# Home-specific configuration
-export HOME_ENV=true
-alias homegit='git config user.email "home@example.com"'
-{{- end }}
-
-# ============================================================================
 # OS-Specific Configuration
 # ============================================================================
 {{- if eq .chezmoi.os "darwin" }}
@@ -158,15 +170,16 @@ alias update='sudo apt update && sudo apt upgrade'
 [ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
 
 # ============================================================================
-# Zsh Plugins (if installed)
+# Zsh Plugins (optional - manual install)
 # ============================================================================
-# zsh-autosuggestions
-[ -f "${ZSH_CUSTOM:-$HOME/.config/zsh}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
-    source "${ZSH_CUSTOM:-$HOME/.config/zsh}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+# zsh-autosuggestions (install: git clone https://github.com/zsh-users/zsh-autosuggestions ~/.config/zsh/plugins/zsh-autosuggestions)
+[ -f "$HOME/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
+    source "$HOME/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
-# zsh-syntax-highlighting (must be last)
-[ -f "${ZSH_CUSTOM:-$HOME/.config/zsh}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
-    source "${ZSH_CUSTOM:-$HOME/.config/zsh}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+# zsh-syntax-highlighting (install: git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.config/zsh/plugins/zsh-syntax-highlighting)
+# Must be sourced last
+[ -f "$HOME/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
+    source "$HOME/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # ============================================================================
 # Additional Configurations

@@ -64,11 +64,6 @@ case "$PKG_MANAGER" in
             sudo install lazygit /usr/local/bin
             rm lazygit lazygit.tar.gz
         fi
-
-        # Install oh-my-posh
-        if ! command -v oh-my-posh &> /dev/null; then
-            curl -s https://ohmyposh.dev/install.sh | bash -s
-        fi
         ;;
 
     dnf)
@@ -80,11 +75,6 @@ case "$PKG_MANAGER" in
             ripgrep fd-find bat eza \
             btop \
             gh lazygit || true
-
-        # Install oh-my-posh
-        if ! command -v oh-my-posh &> /dev/null; then
-            curl -s https://ohmyposh.dev/install.sh | bash -s
-        fi
         ;;
 
     pacman)
@@ -95,7 +85,7 @@ case "$PKG_MANAGER" in
             tmux fzf \
             ripgrep fd bat eza \
             btop \
-            github-cli lazygit oh-my-posh || true
+            github-cli lazygit || true
         ;;
 
     zypper)
@@ -106,16 +96,11 @@ case "$PKG_MANAGER" in
             tmux fzf \
             ripgrep fd bat eza \
             btop || true
-
-        # Install oh-my-posh
-        if ! command -v oh-my-posh &> /dev/null; then
-            curl -s https://ohmyposh.dev/install.sh | bash -s
-        fi
         ;;
 
     *)
         echo "Unknown package manager. Please install packages manually."
-        echo "Required packages: git, curl, wget, zsh, bash, tmux, fzf, ripgrep, fd, bat, eza, btop, oh-my-posh"
+        echo "Required packages: git, curl, wget, zsh, bash, tmux, fzf, ripgrep, fd, bat, eza, btop"
         ;;
 esac
 

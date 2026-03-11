@@ -45,24 +45,6 @@ Set-Alias -Name gc -Value git\ commit
 Set-Alias -Name gp -Value git\ push
 
 # ============================================================================
-# Prompt (Oh-My-Posh)
-# ============================================================================
-# Use Oh-My-Posh if available
-if (Get-Module -ListAvailable -Name oh-my-posh) {
-    Import-Module oh-my-posh
-    
-    # Set theme based on OS
-    $theme = "paradox"
-    {{- if eq .chezmoi.os "windows" }}
-    $theme = "avit"
-    {{- else if eq .chezmoi.os "darwin" }}
-    $theme = "crater"
-    {{- end }}
-    
-    Set-OhMyPoshTheme $theme
-}
-
-# ============================================================================
 # Environment Variables
 # ============================================================================
 # Set UTF-8 encoding
