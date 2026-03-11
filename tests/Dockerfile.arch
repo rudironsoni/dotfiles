@@ -24,20 +24,24 @@ RUN pacman -Syu --noconfirm && \
     gnupg \
     python \
     python-yaml \
-    jq
+    jq \
+    sudo
 
-# Create test user
-RUN useradd -m -s /bin/bash testuser
+# Create test user with sudo access
+RUN useradd -m -s /bin/bash testuser && \
+    echo "testuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Install chezmoi
 RUN sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
 
-# Try to install 1Password CLI (best effort - use AUR or direct download)
-RUN (curl -sSL https://cache.agilebits.com/dist/1P/2P/op2/pkg/2.32.0/op_linux_amd64_v2.32.0.zip -o /tmp/op.zip && \
-     unzip -o /tmp/op.zip -d /usr/local/bin/ && \
-     chmod +x /usr/local/bin/op && \
-     rm /tmp/op.zip) || \
-    echo "1Password CLI installation skipped - will test without it"
+# Install 1Password CLI from AUR
+# Import the 1Password signing key for the testuser
+RUN sudo -u testuser bash -c 'gpg --keyserver keyserver.ubuntu.com --recv-keys 3FEF9748469ADBE15DA7CA80AC2D62742012EA22' && \
+    sudo -u testuser bash -c 'cd /tmp && \
+    git clone https://aur.archlinux.org/1password-cli.git && \
+    cd 1password-cli && \
+    makepkg -si --noconfirm' && \
+    rm -rf /tmp/1password-cli
 
 # Copy test scripts
 COPY scripts/ /home/testuser/scripts/
