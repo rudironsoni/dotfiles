@@ -104,4 +104,10 @@ case "$PKG_MANAGER" in
         ;;
 esac
 
+# Install oh-my-posh (cross-platform)
+if ! command -v oh-my-posh &> /dev/null; then
+    echo "Installing oh-my-posh..."
+    curl -s https://ohmyposh.dev/install.sh | bash -s
+fi
+
 echo "=== Linux package installation complete ==="
