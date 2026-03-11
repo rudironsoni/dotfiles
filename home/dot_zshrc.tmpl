@@ -187,7 +187,53 @@ alias update='sudo apt update && sudo apt upgrade'
     source "$HOME/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # ============================================================================
+# Claude Code Configuration
+# ============================================================================
+# Model configuration
+export ANTHROPIC_DEFAULT_OPUS_MODEL=hf:moonshotai/Kimi-K2.5
+export ANTHROPIC_DEFAULT_SONNET_MODEL=hf:moonshotai/Kimi-K2.5
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=hf:MiniMaxAI/MiniMax-M2.5
+export CLAUDE_CODE_SUBAGENT_MODEL=hf:moonshotai/Kimi-K2.5
+
+# Privacy configuration
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+
+# Experimental features
+export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+
+# Claude Code aliases
+alias cc="claude --verbose --dangerously-skip-permissions"
+alias ccti="claude --verbose --dangerously-skip-permissions --teammate-mode in-process"
+alias cctt="claude --verbose --dangerously-skip-permissions --teammate-mode tmux"
+
+# ============================================================================
+# Secrets (via 1Password)
+# ============================================================================
+{{- if lookPath "op" }}
+# GitHub Personal Access Token
+export GITHUB_MCP_TOKEN={{ output "op" "read" "op://Personal/GitHub MCP Token/credential" | trim | quote }}
+export GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_MCP_TOKEN}
+
+# Synthetic API Key
+export SYNTHETIC_API_KEY={{ output "op" "read" "op://Personal/Synthetic API Key/credential" | trim | quote }}
+export ANTHROPIC_AUTH_TOKEN=${SYNTHETIC_API_KEY}
+
+# Anthropic API Base URL
+export ANTHROPIC_BASE_URL="https://api.synthetic.new/anthropic"
+{{- else }}
+# 1Password CLI not available - secrets must be set manually or via .zshrc.local
+# export GITHUB_MCP_TOKEN=""
+# export GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_MCP_TOKEN}
+# export SYNTHETIC_API_KEY=""
+# export ANTHROPIC_AUTH_TOKEN=${SYNTHETIC_API_KEY}
+# export ANTHROPIC_BASE_URL="https://api.synthetic.new/anthropic"
+{{- end }}
+
+# ============================================================================
 # Additional Configurations
 # ============================================================================
 # Source additional zsh configurations if they exist
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+
+# Shellfish integration (if exists)
+test -e "$HOME/.shellfishrc" && source "$HOME/.shellfishrc"

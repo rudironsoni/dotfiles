@@ -217,6 +217,34 @@ gh auth login
 # This creates ~/.config/gh/hosts.yml (excluded from dotfiles)
 ```
 
+### Required 1Password Items for Claude Code
+
+The dotfiles expect these items in 1Password (create in your Personal vault):
+
+| Item Name | Field | Purpose |
+|-----------|-------|---------|
+| `GitHub MCP Token` | `credential` | GitHub Personal Access Token for MCP |
+| `Synthetic API Key` | `credential` | API key for synthetic.new Anthropic proxy |
+
+**Setup commands:**
+
+```bash
+# Store GitHub token (replace with your actual token)
+op item create --category="API Credential" --title="GitHub MCP Token" --vault="Private" credential="ghp_xxxxxxxxxxxxxxxx"
+
+# Store Synthetic API key (replace with your actual key)
+op item create --category="API Credential" --title="Synthetic API Key" --vault="Private" credential="syn_xxxxxxxxxxxxxxxx"
+```
+
+**Template usage in dotfiles:**
+
+```go-template
+{{- if lookPath "op" }}
+export GITHUB_MCP_TOKEN={{ output "op" "read" "op://Personal/GitHub MCP Token/credential" | trim | quote }}
+export SYNTHETIC_API_KEY={{ output "op" "read" "op://Personal/Synthetic API Key/credential" | trim | quote }}
+{{- end }}
+```
+
 ### Other Services
 
 For services that require API tokens:
