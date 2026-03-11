@@ -2,6 +2,31 @@
 
 My dotfiles managed with [chezmoi](https://www.chezmoi.io/), with 1Password for secrets.
 
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [Supported Operating Systems](#supported-operating-systems)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Features](#features)
+  - [Shell Environment](#shell-environment)
+  - [Development Tools](#development-tools)
+  - [System Tools](#system-tools)
+  - [AI Assistants](#ai-assistants)
+  - [Security](#security)
+- [1Password Integration](#1password-integration)
+- [Docker Testing](#docker-testing)
+- [Repository Structure](#repository-structure)
+- [Post-Installation Setup](#post-installation-setup)
+- [Platform-Specific Notes](#platform-specific-notes)
+- [Customization](#customization)
+- [Security](#security-1)
+- [Troubleshooting](#troubleshooting)
+- [Verification](#verification)
+- [Uninstallation](#uninstallation)
+- [Getting Help](#getting-help)
+- [License](#license)
+
 ## Quick Start
 
 ```bash
