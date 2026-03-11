@@ -66,7 +66,7 @@ test_1password_installed() {
         version=$(op --version)
         log_success "1Password CLI installed: ${version}"
     else
-        log_info "1Password CLI not installed (optional)"
+        log_error "1Password CLI not installed (required)"
     fi
 }
 

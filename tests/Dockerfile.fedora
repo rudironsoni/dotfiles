@@ -34,6 +34,11 @@ RUN useradd -m -s /bin/bash testuser
 # Install chezmoi
 RUN sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
 
+# Install 1Password CLI
+RUN rpm -i https://downloads.1password.com/linux/rpm/stable/x86_64/1password-cli-latest.rpm || \
+    (curl -sS https://downloads.1password.com/linux/tar/stable/x86_64/1password-cli-latest.tar.gz | \
+    tar -xzf - -C /tmp && mv /tmp/op /usr/local/bin/)
+
 # Copy test scripts
 COPY scripts/ /home/testuser/scripts/
 COPY tests/ /home/testuser/tests/
