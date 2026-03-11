@@ -16,7 +16,7 @@
   },
   "env": {
     "ANTHROPIC_BASE_URL": "https://api.synthetic.new/anthropic",
-    "ANTHROPIC_AUTH_TOKEN": {{ if lookPath "op" }}{{ output "op" "read" "op://vault-prd/Synthetic API Key/credential" | trim | quote }}{{ else }}""{{ end }},
+    "ANTHROPIC_AUTH_TOKEN": {{ if env "OP_SERVICE_ACCOUNT_TOKEN" }}{{ output "op" "read" "op://vault-prd/Synthetic API Key/credential" | trim | quote }}{{ else }}""{{ end }},
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "hf:moonshotai/Kimi-K2.5",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "hf:moonshotai/Kimi-K2.5",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "hf:MiniMaxAI/MiniMax-M2.5",
@@ -60,44 +60,10 @@
     ],
     "defaultMode": "acceptEdits"
   },
-  "hooks": {
-    "PreCompact": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bd prime"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bd prime"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/rtk-rewrite.sh"
-          }
-        ]
-      }
-    ]
-  },
+  "hooks": {},
   "statusLine": {
     "type": "command",
-    "command": "~/.claude/synthetic-statusline.sh",
+    "command": "npx -y ccstatusline@latest",
     "padding": 0
   },
   "enabledPlugins": {
