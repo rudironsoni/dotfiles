@@ -1,0 +1,52 @@
+# ==============================================================================
+# Docker Test Container - Arch Linux
+# ==============================================================================
+# This Dockerfile is used to test the dotfiles bootstrap on Arch Linux
+#
+# Build:   docker build -f tests/Dockerfile.arch -t dotfiles-test:arch .
+# Run:     docker run --rm dotfiles-test:arch bash tests/test-chezmoi.sh
+#
+# ==============================================================================
+
+FROM archlinux:latest
+
+# Update system and install base dependencies
+RUN pacman -Syu --noconfirm && \
+    pacman -S --noconfirm \
+    curl \
+    wget \
+    git \
+    vim \
+    ca-certificates-utils \
+    base-devel \
+    procps-ng \
+    unzip \
+    gnupg \
+    python \
+    python-yaml \
+    jq
+
+# Create test user
+RUN useradd -m -s /bin/bash testuser
+
+# Install chezmoi
+RUN sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
+
+# Copy test scripts
+COPY scripts/ /home/testuser/scripts/
+COPY tests/ /home/testuser/tests/
+RUN chmod +x /home/testuser/scripts/*.sh /home/testuser/tests/*.sh 2>/dev/null || true
+
+# Set proper ownership
+RUN chown -R testuser:testuser /home/testuser
+
+# Switch to test user
+USER testuser
+WORKDIR /home/testuser
+
+# Set environment
+ENV HOME=/home/testuser
+ENV USER=testuser
+
+# Default command
+CMD ["bash"]

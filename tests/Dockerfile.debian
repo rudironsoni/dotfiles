@@ -1,19 +1,19 @@
 # ==============================================================================
-# Docker Test Container - Linux (Fixed)
+# Docker Test Container - Debian Stable
 # ==============================================================================
-# This Dockerfile is used to test the dotfiles bootstrap on a Linux environment
+# This Dockerfile is used to test the dotfiles bootstrap on Debian stable
 #
-# Build:   docker build -f tests/Dockerfile.linux -t dotfiles-test .
-# Run:     docker run --rm dotfiles-test bash tests/test-chezmoi.sh
+# Build:   docker build -f tests/Dockerfile.debian -t dotfiles-test:debian .
+# Run:     docker run --rm dotfiles-test:debian bash tests/test-chezmoi.sh
 #
 # ==============================================================================
 
-FROM ubuntu:24.04
+FROM debian:stable-slim
 
 # Avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install base dependencies and testing tools
+# Install base dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     wget \
@@ -30,19 +30,11 @@ RUN apt-get update && apt-get install -y \
     jq \
     && rm -rf /var/lib/apt/lists/*
 
-# Create test user FIRST (before installing anything as non-root)
+# Create test user
 RUN useradd -m -s /bin/bash testuser
 
-# Install chezmoi (works as root)
+# Install chezmoi
 RUN sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
-
-# Install 1Password CLI via apt (as root)
-RUN curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
-    gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | \
-    tee /etc/apt/sources.list.d/1password.list && \
-    apt-get update && \
-    apt-get install -y 1password-cli
 
 # Copy test scripts
 COPY scripts/ /home/testuser/scripts/
@@ -52,7 +44,7 @@ RUN chmod +x /home/testuser/scripts/*.sh /home/testuser/tests/*.sh 2>/dev/null |
 # Set proper ownership
 RUN chown -R testuser:testuser /home/testuser
 
-# Switch to test user for remaining operations
+# Switch to test user
 USER testuser
 WORKDIR /home/testuser
 

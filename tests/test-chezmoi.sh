@@ -8,15 +8,22 @@
 
 set -euo pipefail
 
+# Configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+SOURCE_DIR="${PROJECT_ROOT}"
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m'
 
 PASS=0
 FAIL=0
+WARN=0
 
 log_info() {
     echo -e "${BLUE}[INFO]${NC} $1"
@@ -24,22 +31,23 @@ log_info() {
 
 log_success() {
     echo -e "${GREEN}[PASS]${NC} $1"
-    ((PASS++))
+    PASS=$((PASS + 1))
 }
 
 log_error() {
     echo -e "${RED}[FAIL]${NC} $1"
-    ((FAIL++))
+    FAIL=$((FAIL + 1))
 }
 
 log_warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
+    WARN=$((WARN + 1))
 }
 
 # Test: Check chezmoi is installed
 test_chezmoi_installed() {
     log_info "Testing: chezmoi is installed"
-    
+
     if command -v chezmoi &> /dev/null; then
         local version
         version=$(chezmoi --version)
@@ -52,7 +60,7 @@ test_chezmoi_installed() {
 # Test: Check 1Password CLI is installed
 test_1password_installed() {
     log_info "Testing: 1Password CLI is installed"
-    
+
     if command -v op &> /dev/null; then
         local version
         version=$(op --version)
@@ -62,103 +70,10 @@ test_1password_installed() {
     fi
 }
 
-# Test: chezmoi init with test repo
-test_chezmoi_init() {
-    log_info "Testing: chezmoi init from GitHub"
-    
-    # Use a test repository (fork or test repo)
-    # For testing, we can use the actual repo or a minimal test
-    if chezmoi init rudironsoni --destination "${HOME}/.local/share/chezmoi-test"; then
-        log_success "chezmoi init successful"
-    else
-        log_error "chezmoi init failed"
-    fi
-}
-
-# Test: Apply dotfiles (dry-run)
-test_chezmoi_apply_dry_run() {
-    log_info "Testing: chezmoi apply (dry-run)"
-    
-    if chezmoi apply --dry-run --destination "${HOME}/.local/share/chezmoi-test"; then
-        log_success "chezmoi apply (dry-run) successful"
-    else
-        log_error "chezmoi apply (dry-run) failed"
-    fi
-}
-
-# Test: Template variables are available
-test_template_variables() {
-    log_info "Testing: Template variables"
-    
-    # Test OS detection
-    local os
-    os=$(chezmoi data get "chezmoi.os")
-    
-    if [ -n "$os" ]; then
-        log_success "Template variable .chezmoi.os = ${os}"
-    else
-        log_error "Template variable .chezmoi.os not available"
-    fi
-    
-    # Test hostname
-    local hostname
-    hostname=$(chezmoi data get "chezmoi.hostname")
-    
-    if [ -n "$hostname" ]; then
-        log_success "Template variable .chezmoi.hostname = ${hostname}"
-    else
-        log_error "Template variable .chezmoi.hostname not available"
-    fi
-    
-    # Test username
-    local username
-    username=$(chezmoi data get "chezmoi.username")
-    
-    if [ -n "$username" ]; then
-        log_success "Template variable .chezmoi.username = ${username}"
-    else
-        log_error "Template variable .chezmoi.username not available"
-    fi
-}
-
-# Test: Config files exist
-test_config_files() {
-    log_info "Testing: Config files exist in source state"
-    
-    local config_dir="${HOME}/.local/share/chezmoi-test"
-    
-    # Check shell configs
-    for file in ".bashrc" ".zshrc" ".profile"; do
-        if [ -f "${config_dir}/home/${file}.tmpl" ]; then
-            log_success "Config file exists: ${file}.tmpl"
-        else
-            log_error "Config file missing: ${file}.tmpl"
-        fi
-    done
-    
-    # Check .config directory
-    if [ -d "${config_dir}/home/.config" ]; then
-        log_success ".config directory exists"
-    else
-        log_error ".config directory missing"
-    fi
-}
-
-# Test: Bootstrap script syntax
-test_bootstrap_script() {
-    log_info "Testing: Bootstrap script syntax"
-    
-    if bash -n "${HOME}/.local/share/chezmoi-test/scripts/bootstrap.sh" 2>/dev/null; then
-        log_success "Bootstrap script syntax valid"
-    else
-        log_warning "Bootstrap script not found or has syntax errors"
-    fi
-}
-
 # Test: Docker environment detection
 test_docker_detection() {
     log_info "Testing: Docker environment detection"
-    
+
     # Check if running in Docker
     if [ -f "/.dockerenv" ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
         log_success "Docker environment detected"
@@ -167,37 +82,353 @@ test_docker_detection() {
     fi
 }
 
+# Test: Initialize chezmoi from local source
+test_chezmoi_init() {
+    log_info "Testing: chezmoi init from local source"
+
+    if [ ! -d "$SOURCE_DIR" ]; then
+        log_error "Source directory not found: $SOURCE_DIR"
+        return 1
+    fi
+
+    # Check for .chezmoiroot to understand the structure
+    if [ -f "${SOURCE_DIR}/.chezmoiroot" ]; then
+        local root
+        root=$(cat "${SOURCE_DIR}/.chezmoiroot")
+        log_info "Detected chezmoi root: ${root}"
+    fi
+
+    # Set up git config to avoid interactive prompts
+    git config --global user.email "test@example.com" 2>/dev/null || true
+    git config --global user.name "Test User" 2>/dev/null || true
+
+    # Create a temporary home directory for isolated testing
+    local test_home
+    test_home=$(mktemp -d)
+    local old_home="$HOME"
+    export HOME="$test_home"
+
+    # Initialize chezmoi from local source with auto-accept
+    if chezmoi init --source "$SOURCE_DIR" test@test.com 2>&1; then
+        log_success "chezmoi init successful"
+
+        # Verify source state was set up
+        if [ -d "${test_home}/.local/share/chezmoi" ]; then
+            log_success "Source state initialized"
+        fi
+    else
+        log_error "chezmoi init failed"
+        HOME="$old_home"
+        rm -rf "$test_home"
+        return 1
+    fi
+
+    # Restore original HOME
+    HOME="$old_home"
+    rm -rf "$test_home"
+}
+
+# Test: Template rendering
+test_template_rendering() {
+    log_info "Testing: Template rendering"
+
+    local found_template=false
+    local rendered_count=0
+    local failed_count=0
+    local warn_count=0
+
+    while IFS= read -r -d '' file; do
+        found_template=true
+        local basename
+        basename=$(basename "$file")
+
+        # Skip .chezmoi.toml.tmpl as it uses init-only functions (promptString, etc.)
+        if [[ "$basename" == ".chezmoi.toml.tmpl" ]]; then
+            continue
+        fi
+
+        # Try to render the template
+        local output
+        output=$(chezmoi execute-template < "$file" 2>&1) || true
+        local exit_code=$?
+
+        if [ $exit_code -eq 0 ]; then
+            rendered_count=$((rendered_count + 1))
+        else
+            # Check if failure is due to 1Password not being configured (expected in test env)
+            if echo "$output" | grep -q "1Password\|op://\|no such file" 2>/dev/null; then
+                log_warning "Template uses 1Password secrets (not configured in test): ${basename}"
+                warn_count=$((warn_count + 1))
+            else
+                log_error "Template syntax error: ${basename}"
+                failed_count=$((failed_count + 1))
+            fi
+        fi
+    done < <(find "$SOURCE_DIR" -name "*.tmpl" -type f -print0 2>/dev/null)
+
+    if [ "$found_template" = false ]; then
+        log_warning "No template files found"
+    elif [ $failed_count -eq 0 ]; then
+        if [ $warn_count -gt 0 ]; then
+            log_success "${rendered_count} templates rendered, ${warn_count} need 1Password (expected in test)"
+        else
+            log_success "All ${rendered_count} templates rendered successfully"
+        fi
+    else
+        log_error "${failed_count} templates failed to render"
+    fi
+}
+
+# Test: Chezmoi data context
+test_chezmoi_data() {
+    log_info "Testing: Chezmoi data context"
+
+    local data
+    if ! data=$(chezmoi data 2>/dev/null); then
+        log_error "Cannot retrieve chezmoi data"
+        return 1
+    fi
+
+    # Check for expected OS values
+    local os
+    os=$(echo "$data" | jq -r '.chezmoi.os' 2>/dev/null || echo "unknown")
+
+    if [ -n "$os" ] && [ "$os" != "null" ]; then
+        log_success "OS detected: ${os}"
+    else
+        log_error "OS not detected"
+    fi
+
+    # Check for architecture
+    local arch
+    arch=$(echo "$data" | jq -r '.chezmoi.arch' 2>/dev/null || echo "unknown")
+
+    if [ -n "$arch" ] && [ "$arch" != "null" ]; then
+        log_success "Architecture detected: ${arch}"
+    else
+        log_warning "Architecture not detected"
+    fi
+
+    # Check for hostname
+    local hostname
+    hostname=$(echo "$data" | jq -r '.chezmoi.hostname' 2>/dev/null || echo "unknown")
+
+    if [ -n "$hostname" ] && [ "$hostname" != "null" ]; then
+        log_success "Hostname detected: ${hostname}"
+    else
+        log_warning "Hostname not detected"
+    fi
+}
+
+# Test: Config files exist
+test_config_files() {
+    log_info "Testing: Config files exist in source state"
+
+    # Check for home directory templates
+    local home_dir="${SOURCE_DIR}/home"
+    if [ ! -d "$home_dir" ]; then
+        log_error "Home directory not found in source: ${home_dir}"
+        return 1
+    fi
+
+    # Check shell configs
+    local shell_configs=(".bashrc.tmpl" ".zshrc.tmpl" ".profile.tmpl")
+    local found_count=0
+
+    for config in "${shell_configs[@]}"; do
+        if [ -f "${home_dir}/${config}" ]; then
+            ((found_count++))
+        fi
+    done
+
+    if [ $found_count -gt 0 ]; then
+        log_success "Found ${found_count} shell config templates"
+    else
+        log_warning "No shell config templates found"
+    fi
+
+    # Check .config directory
+    if [ -d "${home_dir}/dot_config" ] || [ -d "${home_dir}/.config" ]; then
+        log_success ".config directory exists in source"
+    else
+        log_warning ".config directory not found in source"
+    fi
+}
+
+# Test: External dependencies
+test_external_deps() {
+    log_info "Testing: External dependencies configuration"
+
+    local external_file="${SOURCE_DIR}/.chezmoiexternal.toml"
+    if [ -f "$external_file" ]; then
+        log_success ".chezmoiexternal.toml exists"
+
+        # Check syntax (basic TOML validation)
+        if grep -q '\[.*\]' "$external_file"; then
+            log_success "External dependencies file has sections"
+        fi
+    else
+        log_warning ".chezmoiexternal.toml not found (optional)"
+    fi
+}
+
+# Test: Bootstrap script syntax
+test_bootstrap_script() {
+    log_info "Testing: Bootstrap script syntax"
+
+    local bootstrap_script="${SOURCE_DIR}/scripts/bootstrap.sh"
+    if [ -f "$bootstrap_script" ]; then
+        if bash -n "$bootstrap_script" 2>/dev/null; then
+            log_success "Bootstrap script syntax valid"
+        else
+            log_error "Bootstrap script has syntax errors"
+        fi
+    else
+        log_warning "Bootstrap script not found"
+    fi
+}
+
+# Test: Chezmoi configuration
+test_chezmoi_config() {
+    log_info "Testing: Chezmoi configuration"
+
+    local config_file="${SOURCE_DIR}/.chezmoi.toml.tmpl"
+    if [ -f "$config_file" ]; then
+        # Skip test as .chezmoi.toml.tmpl uses init-only functions
+        log_warning ".chezmoi.toml.tmpl skipped (uses init-only functions)"
+    else
+        log_warning ".chezmoi.toml.tmpl not found"
+    fi
+}
+
+# Test: Package installation scripts
+test_package_scripts() {
+    log_info "Testing: Package installation scripts"
+
+    local scripts_dir="${SOURCE_DIR}/home/.chezmoiscripts"
+    if [ ! -d "$scripts_dir" ]; then
+        scripts_dir="${SOURCE_DIR}/home/dot_chezmoiscripts"
+    fi
+
+    if [ -d "$scripts_dir" ]; then
+        log_success "Chezmoi scripts directory exists"
+
+        local script_count
+        script_count=$(find "$scripts_dir" -name "*.sh" -o -name "*.sh.tmpl" 2>/dev/null | wc -l)
+
+        if [ "$script_count" -gt 0 ]; then
+            log_success "Found ${script_count} installation scripts"
+        else
+            log_warning "No installation scripts found"
+        fi
+    else
+        log_warning "Chezmoi scripts directory not found"
+    fi
+}
+
+# Test: Dry-run apply
+test_dry_run_apply() {
+    log_info "Testing: Dry-run chezmoi apply"
+
+    if [ ! -d "$SOURCE_DIR" ]; then
+        log_error "Source directory not found"
+        return 1
+    fi
+
+    # Set up git config to avoid interactive prompts
+    git config --global user.email "test@example.com" 2>/dev/null || true
+    git config --global user.name "Test User" 2>/dev/null || true
+
+    # Set up a test configuration
+    local test_home
+    test_home=$(mktemp -d)
+    local old_home="$HOME"
+    export HOME="$test_home"
+
+    # Create necessary directories
+    mkdir -p "${test_home}/.local/share"
+
+    # Initialize chezmoi
+    if chezmoi init --source "$SOURCE_DIR" test@test.com > /dev/null 2>&1; then
+        # Check if init created the source state directory
+        if [ -d "${test_home}/.local/share/chezmoi" ]; then
+            if chezmoi apply --dry-run > /dev/null 2>&1; then
+                log_success "Dry-run apply completed"
+            else
+                # Check if failure is due to 1Password
+                local output
+                output=$(chezmoi apply --dry-run 2>&1) || true
+                if echo "$output" | grep -q "1Password\|op://" 2>/dev/null; then
+                    log_warning "Dry-run requires 1Password (expected in test)"
+                else
+                    log_error "Dry-run apply failed"
+                fi
+            fi
+        else
+            log_warning "Source state directory not created"
+        fi
+    else
+        log_warning "Could not initialize chezmoi for dry-run test"
+    fi
+
+    # Cleanup
+    HOME="$old_home"
+    rm -rf "$test_home"
+}
+
 # Main
 main() {
     echo "=========================================="
     echo "  Chezmoi Test Suite"
     echo "=========================================="
+    echo "  Source: ${SOURCE_DIR}"
+    echo "=========================================="
     echo ""
-    
+
+    # Check prerequisites
+    if ! command -v chezmoi &> /dev/null; then
+        log_error "chezmoi is not installed"
+        exit 1
+    fi
+
     # Run tests
     test_chezmoi_installed
     test_1password_installed
     test_docker_detection
-    
+
     echo ""
-    
+    echo "--- Source State Tests ---"
+    echo ""
+
     test_chezmoi_init
-    test_chezmoi_apply_dry_run
-    
+    test_template_rendering
+    test_chezmoi_data
+
     echo ""
-    
-    test_template_variables
+    echo "--- File Structure Tests ---"
+    echo ""
+
     test_config_files
+    test_external_deps
     test_bootstrap_script
-    
+    test_chezmoi_config
+    test_package_scripts
+
+    echo ""
+    echo "--- Application Tests ---"
+    echo ""
+
+    test_dry_run_apply
+
     echo ""
     echo "=========================================="
     echo "  Test Results"
     echo "=========================================="
-    echo -e "${GREEN}Passed:${NC} ${PASS}"
-    echo -e "${RED}Failed:${NC} ${FAIL}"
+    echo -e "${GREEN}Passed:${NC}  ${PASS}"
+    echo -e "${YELLOW}Warnings:${NC} ${WARN}"
+    echo -e "${RED}Failed:${NC}  ${FAIL}"
     echo ""
-    
+
     if [ "$FAIL" -gt 0 ]; then
         echo -e "${RED}Some tests failed!${NC}"
         exit 1

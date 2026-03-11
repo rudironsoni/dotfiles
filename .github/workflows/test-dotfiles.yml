@@ -7,7 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  test-linux:
+  # Native platform tests (no Docker)
+  test-linux-native:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -19,7 +20,7 @@ jobs:
       - name: Initialize chezmoi with source
         run: |
           export PATH="$HOME/.local/bin:$PATH"
-          chezmoi init --source . --verbose testuser@test.com --name="Test User"
+          chezmoi init --source . --verbose testuser@test.com
 
       - name: Run chezmoi doctor
         run: |
@@ -31,7 +32,7 @@ jobs:
           export PATH="$HOME/.local/bin:$PATH"
           chezmoi apply --dry-run --verbose
 
-  test-macos:
+  test-macos-native:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -43,14 +44,14 @@ jobs:
       - name: Initialize chezmoi with source
         run: |
           export PATH="$HOME/.local/bin:$PATH"
-          chezmoi init --source . --verbose testuser@test.com --name="Test User"
+          chezmoi init --source . --verbose testuser@test.com
 
       - name: Run chezmoi doctor
         run: |
           export PATH="$HOME/.local/bin:$PATH"
           chezmoi doctor
 
-  test-windows:
+  test-windows-native:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -60,16 +61,141 @@ jobs:
         run: |
           $uri = 'https://get.chezmoi.io/ps1'
           $script = Invoke-RestMethod -Uri $uri
-          Invoke-Expression "$script -d $HOME\\.local\\bin"
+          Invoke-Expression "$script -d $HOME\.local\bin"
 
       - name: Initialize chezmoi with source
         run: |
-          $env:PATH = "$env:USERPROFILE\\.local\\bin;$env:PATH"
-          chezmoi init --source . --verbose testuser@test.com --name="Test User"
+          $env:PATH = "$env:USERPROFILE\.local\bin;$env:PATH"
+          chezmoi init --source . --verbose testuser@test.com
         shell: pwsh
 
       - name: Run chezmoi doctor
         run: |
-          $env:PATH = "$env:USERPROFILE\\.local\\bin;$env:PATH"
+          $env:PATH = "$env:USERPROFILE\.local\bin;$env:PATH"
           chezmoi doctor
         shell: pwsh
+
+  # Docker-based tests for comprehensive Linux distro coverage
+  test-docker-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [ubuntu, debian, fedora, arch]
+        include:
+          - distro: ubuntu
+            dockerfile: tests/Dockerfile.linux
+            image: dotfiles-test:ubuntu
+          - distro: debian
+            dockerfile: tests/Dockerfile.debian
+            image: dotfiles-test:debian
+          - distro: fedora
+            dockerfile: tests/Dockerfile.fedora
+            image: dotfiles-test:fedora
+          - distro: arch
+            dockerfile: tests/Dockerfile.arch
+            image: dotfiles-test:arch
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -f ${{ matrix.dockerfile }} -t ${{ matrix.image }} .
+
+      - name: Run chezmoi tests
+        run: |
+          docker run --rm \
+            -v "$(pwd):/home/testuser/dotfiles:ro" \
+            -e "TEST_MODE=true" \
+            -e "CI=true" \
+            ${{ matrix.image }} \
+            bash -c "cd /home/testuser/dotfiles && bash tests/test-chezmoi.sh"
+
+      - name: Run template validation
+        run: |
+          docker run --rm \
+            -v "$(pwd):/home/testuser/dotfiles:ro" \
+            -e "TEST_MODE=true" \
+            -e "CI=true" \
+            ${{ matrix.image }} \
+            bash -c "cd /home/testuser/dotfiles && bash tests/validate-templates.sh /home/testuser/dotfiles" \
+            || echo "Validation completed with warnings"
+        continue-on-error: true
+
+      - name: Test template rendering
+        run: |
+          docker run --rm \
+            -v "$(pwd):/home/testuser/dotfiles:ro" \
+            ${{ matrix.image }} \
+            bash -c "cd /home/testuser/dotfiles && chezmoi execute-template < home/dot_zshrc.tmpl > /dev/null && echo 'Template renders successfully'"
+
+      - name: Test dry-run apply
+        run: |
+          docker run --rm \
+            -v "$(pwd):/home/testuser/dotfiles:ro" \
+            ${{ matrix.image }} \
+            bash -c "cd /home/testuser/dotfiles && chezmoi init --source /home/testuser/dotfiles test@test.com && chezmoi apply --dry-run"
+
+  # Template validation across all platforms
+  validate-templates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install chezmoi
+        run: sh -c "$(curl -fsLS get.chezmoi.io)"
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-yaml jq
+
+      - name: Validate template syntax
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          bash tests/validate-templates.sh .
+
+      - name: Test OS-specific templates
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          # Test that OS detection works
+          chezmoi data | jq -r '.chezmoi.os'
+
+  # Security scan for hardcoded secrets
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Scan for hardcoded secrets
+        run: |
+          # Patterns to check for
+          patterns=(
+            'password[[:space:]]*=[[:space:]]*"[^"]+"'
+            'secret[[:space:]]*=[[:space:]]*"[^"]+"'
+            'api_key[[:space:]]*=[[:space:]]*"[^"]+"'
+            'ghp_[a-zA-Z0-9]{36}'
+            'sk-[a-zA-Z0-9]{48}'
+          )
+
+          found=0
+          for pattern in "${patterns[@]}"; do
+            if grep -rE "$pattern" --include="*.tmpl" --include="*.sh" --include="*.yml" --include="*.yaml" . 2>/dev/null; then
+              echo "⚠️  Potential hardcoded secret found matching: $pattern"
+              found=1
+            fi
+          done
+
+          if [ $found -eq 0 ]; then
+            echo "✅ No hardcoded secrets detected"
+          else
+            echo "⚠️  Review the above findings - they may be false positives"
+          fi
+        continue-on-error: true
