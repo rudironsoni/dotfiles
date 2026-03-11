@@ -28,8 +28,14 @@ autoload -Uz promptinit
 # Initialize colors
 colors
 
-# Initialize completion
-compinit
+# Initialize completion with caching for performance
+# Only rebuild completion cache once per day
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+else
+    compinit -C  # Use cached completions
+fi
 
 # ============================================================================
 # Completion
@@ -43,17 +49,32 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*:descriptions' format '%B%d%b'
 
 # ============================================================================
-# Homebrew
+# PATH Configuration
 # ============================================================================
-{{- if eq .chezmoi.os "darwin" }}
+# Build PATH components in order of priority
+path_components=()
+
 # macOS Homebrew
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+{{- if eq .chezmoi.os "darwin" }}
+path_components+=("/opt/homebrew/bin" "/opt/homebrew/sbin")
 {{- else }}
 # Linuxbrew
 if [[ -d /home/linuxbrew/.linuxbrew ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 {{- end }}
+
+# Development tools
+path_components+=("$HOME/.bun/bin")
+path_components+=("$HOME/.local/share/pnpm")
+path_components+=("$HOME/.opencode/bin")
+path_components+=("$HOME/.local/bin")
+
+# Add existing PATH
+path_components+=("$PATH")
+
+# Join and export
+export PATH=$(IFS=:; echo "${path_components[*]}")
 
 # ============================================================================
 # Node Version Manager (NVM)
@@ -63,34 +84,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # ============================================================================
-# Bun
-# ============================================================================
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# ============================================================================
-# pnpm
-# ============================================================================
-export PNPM_HOME="$HOME/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-
-# ============================================================================
-# opencode
-# ============================================================================
-export PATH="$HOME/.opencode/bin:$PATH"
-
-# ============================================================================
-# Local bin
-# ============================================================================
-export PATH="$HOME/.local/bin:$PATH"
-
-# ============================================================================
 # Editor
 # ============================================================================
-export EDITOR={{ if stat "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
+export EDITOR={{ (output "sh" "-c" "cat $HOME/.config/editors 2>/dev/null || echo vim") | trim | quote }}
 export VISUAL="$EDITOR"
 
 # ============================================================================
@@ -175,16 +171,32 @@ alias update='sudo apt update && sudo apt upgrade'
 [ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
 
 # ============================================================================
-# Zsh Plugins (optional - manual install)
+# Zsh Plugins (managed by chezmoi via .chezmoiexternal.toml)
 # ============================================================================
-# zsh-autosuggestions (install: git clone https://github.com/zsh-users/zsh-autosuggestions ~/.config/zsh/plugins/zsh-autosuggestions)
-[ -f "$HOME/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
-    source "$HOME/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
-# zsh-syntax-highlighting (install: git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.config/zsh/plugins/zsh-syntax-highlighting)
-# Must be sourced last
-[ -f "$HOME/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
+# zsh-completions (must be loaded before compinit)
+if [ -f "$HOME/.config/zsh/plugins/zsh-completions/zsh-completions.plugin.zsh" ]; then
+    fpath=("$HOME/.config/zsh/plugins/zsh-completions/src" $fpath)
+fi
+
+# zsh-autosuggestions
+if [ -f "$HOME/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+fi
+
+# fzf-tab (improves fzf integration with completions)
+if [ -f "$HOME/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh"
+    # Preview directory contents with fzf-tab
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -la $realpath'
+    zstyle ':fzf-tab:complete:ls:*' fzf-preview 'cat $realpath'
+fi
+
+# zsh-syntax-highlighting (must be sourced last)
+if [ -f "$HOME/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
     source "$HOME/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
 
 # ============================================================================
 # Claude Code Configuration

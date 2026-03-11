@@ -30,7 +30,6 @@ See [INSTALL.md](INSTALL.md) for detailed instructions.
 ### Shell Environment
 - **Zsh** with Oh My Posh prompt, syntax highlighting, auto-suggestions
 - **Bash** with modern configuration
-- **Fish** with full setup
 - **PowerShell** for Windows
 
 ### Development Tools

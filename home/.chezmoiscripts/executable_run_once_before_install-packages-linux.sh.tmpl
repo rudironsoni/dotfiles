@@ -39,7 +39,7 @@ case "$PKG_MANAGER" in
         sudo apt-get update
         sudo apt-get install -y \
             git curl wget \
-            zsh bash fish \
+            zsh bash \
             tmux fzf \
             ripgrep fd-find bat eza \
             btop \
@@ -56,13 +56,20 @@ case "$PKG_MANAGER" in
             sudo apt-get install -y 1password-cli || true
         fi
 
-        # Install lazygit
+        # Install lazygit with error handling
         if ! command -v lazygit &> /dev/null; then
-            LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-            curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+            echo "Installing lazygit..."
+            LAZYGIT_VERSION=$(curl -sf "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*') || {
+                echo "Failed to get lazygit version"
+                return 1
+            }
+            curl -fLo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" || {
+                echo "Failed to download lazygit"
+                return 1
+            }
             tar xf lazygit.tar.gz lazygit
             sudo install lazygit /usr/local/bin
-            rm lazygit lazygit.tar.gz
+            rm -f lazygit lazygit.tar.gz
         fi
         ;;
 
@@ -70,7 +77,7 @@ case "$PKG_MANAGER" in
         echo "Using dnf (Fedora/RHEL)..."
         sudo dnf install -y \
             git curl wget \
-            zsh bash fish \
+            zsh bash \
             tmux fzf \
             ripgrep fd-find bat eza \
             btop \
@@ -81,7 +88,7 @@ case "$PKG_MANAGER" in
         echo "Using pacman (Arch)..."
         sudo pacman -Sy --needed --noconfirm \
             git curl wget \
-            zsh bash fish \
+            zsh bash \
             tmux fzf \
             ripgrep fd bat eza \
             btop \
@@ -92,7 +99,7 @@ case "$PKG_MANAGER" in
         echo "Using zypper (openSUSE)..."
         sudo zypper install -y \
             git curl wget \
-            zsh bash fish \
+            zsh bash \
             tmux fzf \
             ripgrep fd bat eza \
             btop || true
@@ -100,7 +107,7 @@ case "$PKG_MANAGER" in
 
     *)
         echo "Unknown package manager. Please install packages manually."
-        echo "Required packages: git, curl, wget, zsh, bash, tmux, fzf, ripgrep, fd, bat, eza, btop"
+        echo "Required packages: git, curl, wget, zsh, bash, tmux, fzf, ripgrep, fd, bat, eza, btop, gh, lazygit"
         ;;
 esac
 

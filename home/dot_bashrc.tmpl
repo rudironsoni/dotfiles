@@ -79,7 +79,7 @@ fi
 # ============================================================================
 # Editor
 # ============================================================================
-export EDITOR={{ if stat "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
+export EDITOR={{ (output "sh" "-c" "cat $HOME/.config/editors 2>/dev/null || echo vim") | trim | quote }}
 export VISUAL="$EDITOR"
 
 # ============================================================================
@@ -87,19 +87,6 @@ export VISUAL="$EDITOR"
 # ============================================================================
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-
-# ============================================================================
-# Machine-Specific Configuration
-# ============================================================================
-{{- if eq .chezmoi.hostname "work-laptop" }}
-# Work-specific configuration
-export WORK_ENV=true
-alias workgit='git config user.email "work@example.com"'
-{{- else if eq .chezmoi.hostname "home-desktop" }}
-# Home-specific configuration
-export HOME_ENV=true
-alias homegit='git config user.email "home@example.com"'
-{{- end }}
 
 # ============================================================================
 # OS-Specific Configuration

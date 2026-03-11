@@ -5,7 +5,7 @@
 git_protocol: https
 
 # Editor
-editor: {{ if stat "$HOME/.config/editors" }}{{ trim (output "cat" "$HOME/.config/editors") }}{{ else }}"vim"{{ end }}
+editor: {{ (output "sh" "-c" "cat $HOME/.config/editors 2>/dev/null || echo vim") | trim | quote }}
 
 # Pager
 pager: {{ if lookPath "delta" }}"delta"{{ else }}"cat"{{ end }}
@@ -21,11 +21,6 @@ aliases:
 
 # gh auth status
 # Run `gh auth login` to authenticate
-
-# Default repository owner
-{{- if eq .chezmoi.hostname "work-laptop" }}
-# Work-specific settings
-{{- end }}
 
 # Note: Sensitive data like personal access tokens should not be stored here
 # Use `gh auth status` to check authentication

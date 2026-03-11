@@ -16,7 +16,7 @@ editor:
 
 # Terminal
 terminal:
-  shell: {{ if stat "$SHELL" }}{{ trim (output "cat" "$SHELL") }}{{ else }}"/bin/bash"{{ end }}
+  shell: {{ env "SHELL" | default "/bin/zsh" | quote }}
   fontSize: 13
   fontFamily: "Fira Code, monospace"
 

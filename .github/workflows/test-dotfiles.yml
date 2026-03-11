@@ -1,0 +1,75 @@
+name: Test Dotfiles
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install chezmoi
+        run: sh -c "$(curl -fsLS get.chezmoi.io)"
+
+      - name: Initialize chezmoi with source
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          chezmoi init --source . --verbose testuser@test.com --name="Test User"
+
+      - name: Run chezmoi doctor
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          chezmoi doctor
+
+      - name: Test template rendering (dry-run)
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          chezmoi apply --dry-run --verbose
+
+  test-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install chezmoi
+        run: sh -c "$(curl -fsLS get.chezmoi.io)"
+
+      - name: Initialize chezmoi with source
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          chezmoi init --source . --verbose testuser@test.com --name="Test User"
+
+      - name: Run chezmoi doctor
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          chezmoi doctor
+
+  test-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install chezmoi
+        run: |
+          $uri = 'https://get.chezmoi.io/ps1'
+          $script = Invoke-RestMethod -Uri $uri
+          Invoke-Expression "$script -d $HOME\\.local\\bin"
+
+      - name: Initialize chezmoi with source
+        run: |
+          $env:PATH = "$env:USERPROFILE\\.local\\bin;$env:PATH"
+          chezmoi init --source . --verbose testuser@test.com --name="Test User"
+        shell: pwsh
+
+      - name: Run chezmoi doctor
+        run: |
+          $env:PATH = "$env:USERPROFILE\\.local\\bin;$env:PATH"
+          chezmoi doctor
+        shell: pwsh

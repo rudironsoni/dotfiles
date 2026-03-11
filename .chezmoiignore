@@ -17,7 +17,6 @@ dot_config/powershell/**
 dot_bashrc.tmpl
 dot_zshrc.tmpl
 dot_profile.tmpl
-dot_config/fish/**
 dot_config/tmux/**
 dot_config/topgrade/**
 private_dot_ssh/**

@@ -73,27 +73,27 @@
 #     clone.args = ["--depth", "1"]
 
 # ============================================================================
-# Optional: Zsh Plugins (without Oh My Zsh)
+# Zsh Plugins (managed via chezmoi instead of manual clone)
 # ============================================================================
-# [".config/zsh/plugins/zsh-autosuggestions"]
-#     type = "git-repo"
-#     url = "https://github.com/zsh-users/zsh-autosuggestions"
-#     refreshPeriod = "168h"
-#
-# [".config/zsh/plugins/zsh-syntax-highlighting"]
-#     type = "git-repo"
-#     url = "https://github.com/zsh-users/zsh-syntax-highlighting"
-#     refreshPeriod = "168h"
-#
-# [".config/zsh/plugins/zsh-completions"]
-#     type = "git-repo"
-#     url = "https://github.com/zsh-users/zsh-completions"
-#     refreshPeriod = "168h"
-#
-# [".config/zsh/plugins/fzf-tab"]
-#     type = "git-repo"
-#     url = "https://github.com/Aloxaf/fzf-tab"
-#     refreshPeriod = "168h"
+[".config/zsh/plugins/zsh-autosuggestions"]
+    type = "git-repo"
+    url = "https://github.com/zsh-users/zsh-autosuggestions"
+    refreshPeriod = "168h"
+
+[".config/zsh/plugins/zsh-syntax-highlighting"]
+    type = "git-repo"
+    url = "https://github.com/zsh-users/zsh-syntax-highlighting"
+    refreshPeriod = "168h"
+
+[".config/zsh/plugins/zsh-completions"]
+    type = "git-repo"
+    url = "https://github.com/zsh-users/zsh-completions"
+    refreshPeriod = "168h"
+
+[".config/zsh/plugins/fzf-tab"]
+    type = "git-repo"
+    url = "https://github.com/Aloxaf/fzf-tab"
+    refreshPeriod = "168h"
 
 # ============================================================================
 # Optional: Neovim Plugin Manager (lazy.nvim)

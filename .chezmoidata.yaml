@@ -2,8 +2,8 @@
 # https://www.chezmoi.io/reference/templates/chezmoi-data/
 
 # Default values (can be overridden per machine)
-email: {{ .chezmoi.username }}@example.com
-shell: {{ .chezmoi.os }}
+email: "{{ .chezmoi.username }}@example.com"
+shell: "{{ .chezmoi.os }}"
 
 # OS-specific detection
 # Available variables:
