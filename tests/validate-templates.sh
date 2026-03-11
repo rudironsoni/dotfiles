@@ -13,7 +13,9 @@
 set -euo pipefail
 
 # Configuration
-SOURCE_DIR="${1:-/home/testuser/dotfiles}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+SOURCE_DIR="${1:-${PROJECT_ROOT}}"
 HOME_DIR="${HOME:-/home/testuser}"
 
 # Colors
