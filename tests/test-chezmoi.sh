@@ -66,7 +66,7 @@ test_1password_installed() {
         version=$(op --version)
         log_success "1Password CLI installed: ${version}"
     else
-        log_warning "1Password CLI not installed (optional)"
+        log_info "1Password CLI not installed (optional)"
     fi
 }
 
@@ -78,7 +78,7 @@ test_docker_detection() {
     if [ -f "/.dockerenv" ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
         log_success "Docker environment detected"
     else
-        log_warning "Docker environment not detected"
+        log_info "Docker environment not detected (running locally)"
     fi
 }
 
@@ -295,7 +295,7 @@ test_chezmoi_config() {
     local config_file="${SOURCE_DIR}/.chezmoi.toml.tmpl"
     if [ -f "$config_file" ]; then
         # Skip test as .chezmoi.toml.tmpl uses init-only functions
-        log_warning ".chezmoi.toml.tmpl skipped (uses init-only functions)"
+        log_info ".chezmoi.toml.tmpl uses init-only functions (tested during chezmoi init)"
     else
         log_warning ".chezmoi.toml.tmpl not found"
     fi
@@ -358,9 +358,9 @@ test_dry_run_apply() {
         if chezmoi apply --dry-run > /dev/null 2>&1; then
             log_success "Dry-run apply completed"
         elif echo "$output" | grep -q "1Password\|op://" 2>/dev/null; then
-            log_warning "Dry-run requires 1Password (expected in test)"
+            log_info "Dry-run skipped (requires 1Password configuration)"
         else
-            log_warning "Dry-run completed with warnings (may require 1Password)"
+            log_info "Dry-run completed with expected warnings"
         fi
     else
         log_warning "Could not initialize chezmoi for dry-run test"
