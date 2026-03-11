@@ -34,10 +34,14 @@ RUN useradd -m -s /bin/bash testuser
 # Install chezmoi
 RUN sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
 
-# Install 1Password CLI
-RUN rpm -i https://downloads.1password.com/linux/rpm/stable/x86_64/1password-cli-latest.rpm || \
-    (curl -sS https://downloads.1password.com/linux/tar/stable/x86_64/1password-cli-latest.tar.gz | \
-    tar -xzf - -C /tmp && mv /tmp/op /usr/local/bin/)
+# Try to install 1Password CLI (best effort - 1Password doesn't provide stable Fedora packages)
+RUN curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+    gpg --import || true && \
+    (curl -sSL https://cache.agilebits.com/dist/1P/2P/op2/pkg/2.32.0/op_linux_amd64_v2.32.0.zip -o /tmp/op.zip && \
+     unzip -o /tmp/op.zip -d /usr/local/bin/ && \
+     chmod +x /usr/local/bin/op && \
+     rm /tmp/op.zip) || \
+    echo "1Password CLI installation skipped - will test without it"
 
 # Copy test scripts
 COPY scripts/ /home/testuser/scripts/
