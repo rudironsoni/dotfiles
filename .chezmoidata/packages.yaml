@@ -1,0 +1,86 @@
+# Declarative package definitions
+# chezmoi will re-run install scripts when this file changes
+# https://www.chezmoi.io/user-guide/advanced/install-packages-declaratively/
+
+packages:
+  # macOS packages (managed via Homebrew)
+  # Note: 1Password CLI is installed automatically via hooks.read-source-state.pre
+  darwin:
+    brews:
+      - chezmoi
+      - git
+      - curl
+      - wget
+      - zsh
+      - bash
+      - oh-my-posh
+      - tmux
+      - fzf
+      - ripgrep
+      - fd
+      - bat
+      - eza
+      - btop
+      - gh
+      - lazygit
+    casks: []
+
+  # Linux packages (managed via native package managers)
+  linux:
+    common:
+      # Packages available on all distros
+      - git
+      - curl
+      - wget
+      - zsh
+      - bash
+      - tmux
+      - fzf
+      - btop
+    apt:
+      # Debian/Ubuntu specific
+      - ripgrep
+      - fd-find
+      - bat
+      - eza
+      - gh
+    dnf:
+      # Fedora/RHEL specific
+      - ripgrep
+      - fd-find
+      - bat
+      - eza
+      - gh
+      - lazygit
+    pacman:
+      # Arch Linux specific
+      - ripgrep
+      - fd
+      - bat
+      - eza
+      - github-cli
+      - lazygit
+    zypper:
+      # openSUSE specific
+      - ripgrep
+      - fd
+      - bat
+      - eza
+
+  # Windows packages (managed via winget)
+  # Note: 1Password CLI is installed automatically via hooks.read-source-state.pre
+  windows:
+    winget:
+      - { id: twpayne.chezmoi, name: Chezmoi }
+      - { id: Git.Git, name: Git }
+      - { id: Microsoft.WindowsTerminal, name: Windows Terminal }
+      - { id: JanDeDobbeleer.OhMyPosh, name: Oh My Posh }
+      - { id: fzf, name: fzf }
+      - { id: BurntSushi.ripgrep.MSVC, name: ripgrep }
+      - { id: sharkdp.fd, name: fd }
+      - { id: sharkdp.bat, name: bat }
+      - { id: eza-community.eza, name: eza }
+      - { id: GitHub.cli, name: GitHub CLI }
+      - { id: JesseDuffield.lazygit, name: lazygit }
+    scoop:
+      - btop

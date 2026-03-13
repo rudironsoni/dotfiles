@@ -1,143 +1,14 @@
 # SSH Configuration
 # Managed by chezmoi: https://chezmoi.io/
-#
-# IMPORTANT: This template uses 1Password for secrets.
-# You must have 1Password CLI installed and signed in to use secret placeholders.
-# Without 1Password CLI, the secrets will be left as placeholder comments.
-#
-# To use 1Password:
-# 1. Install: brew install 1password-cli
-# 2. Sign in: eval $(op signin)
-# 3. Add secrets to 1Password vault
 
-# Global settings
 Host *
-    # Security
     IdentitiesOnly yes
-    
-    # Add keys to agent
     AddKeysToAgent yes
-    
-    # Keepalive
     ServerAliveInterval 60
     ServerAliveCountMax 3
-    
-    # Compression
     Compression yes
-    
-    # Forward agent
     ForwardAgent no
-    
-    # Disable strict host key checking for known hosts (use with caution)
-    # StrictHostKeyChecking accept-new
-    
-    # Cache credentials
-    # Note: GitHub keys should use git credential helper instead
 
-# ============================================================================
-# GitHub
-# ============================================================================
 Host github.com
     HostName github.com
     User git
-    # Use GitHub CLI credential helper
-    # If you have a specific key in 1Password, uncomment and configure:
-    # IdentityFile ~/.ssh/id_ed25519
-    # UseKeychain yes  # macOS only
-
-# ============================================================================
-# GitHub Copilot
-# ============================================================================
-Host github-copilot
-    HostName github.com
-    User git
-    # For GitHub Copilot, use a separate key if needed
-    # IdentityFile ~/.ssh/id_ed25519_copilot
-
-# ============================================================================
-# Personal Server
-# ============================================================================
-Host personal-server
-    HostName example.com
-    User {{ .chezmoi.username }}
-    Port 22
-    # Forward X11
-    ForwardX11 yes
-    # Keep connection alive
-    KeepAlive yes
-    # Use specific identity file
-    # IdentityFile ~/.ssh/id_ed25519_personal
-
-# ============================================================================
-# Work Server
-# ============================================================================
-Host work-server
-    HostName work.example.com
-    User {{ .chezmoi.username }}
-    Port 22
-    # Forward X11
-    ForwardX11 yes
-    # Use specific identity file
-    # IdentityFile ~/.ssh/id_ed25519_work
-
-# ============================================================================
-# AWS EC2 (example)
-# ============================================================================
-Host aws-*
-    HostName {{ .chezmoi.hostname }}.amazonaws.com
-    User ec2-user
-    # IdentityFile from 1Password (uncomment and configure if needed):
-    # Requires: 1Password CLI installed and signed in
-    # Example template: {{ `{{ if lookPath "op" }}{{ output "op" "read" "op://vault/item/field" }}{{ end }}` }}
-    # Uncomment below and use specific key path:
-    # IdentityFile ~/.ssh/aws_key.pem
-    
-    # Forward agent
-    ForwardAgent yes
-    
-    # Keepalive
-    ServerAliveInterval 60
-
-# ============================================================================
-# Jump Host / Bastion
-# ============================================================================
-Host bastion
-    HostName bastion.example.com
-    User {{ .chezmoi.username }}
-    Port 22
-    # IdentityFile from 1Password
-    # IdentityFile ~/.ssh/id_ed25519_bastion
-
-# ============================================================================
-# Kubernetes (example)
-# ============================================================================
-Host k8s-*
-    HostName {{ .chezmoi.hostname }}.k8s.example.com
-    User admin
-    # ProxyJump through bastion
-    # ProxyJump bastion
-    
-    # Keepalive
-    ServerAliveInterval 30
-
-# ============================================================================
-# Local Development
-# ============================================================================
-Host localhost
-    HostName localhost
-    User {{ .chezmoi.username }}
-    Port 22
-    
-    # Disable strict host key checking for localhost
-    StrictHostKeyChecking no
-    UserKnownHostsFile /dev/null
-
-# ============================================================================
-# WSL-specific (if running in WSL)
-# ============================================================================
-{{- if eq .chezmoi.os "linux" }}
-Host *
-    # Use Windows OpenSSH if in WSL
-    # Uncomment for WSL with Windows OpenSSH:
-    # ProxyCommand "C:\\Windows\\System32\\OpenSSH\\ssh.exe" -W %h:%p %r
-{{- end }}

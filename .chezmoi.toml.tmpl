@@ -1,6 +1,11 @@
 # chezmoi configuration template
 # https://www.chezmoi.io/reference/configuration/
 
+# Install 1Password CLI before reading source state
+# https://www.chezmoi.io/user-guide/advanced/install-your-password-manager-on-init/
+[hooks.read-source-state.pre]
+    command = ".local/share/chezmoi/.install-1password.sh"
+
 # Auto-detect from git config
 {{- $email := "" }}
 {{- $name := "" }}

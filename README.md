@@ -12,7 +12,6 @@ My dotfiles managed with [chezmoi](https://www.chezmoi.io/), with 1Password for 
   - [Shell Environment](#shell-environment)
   - [Development Tools](#development-tools)
   - [System Tools](#system-tools)
-  - [AI Assistants](#ai-assistants)
   - [Security](#security)
 - [1Password Integration](#1password-integration)
 - [Docker Testing](#docker-testing)
@@ -30,8 +29,8 @@ My dotfiles managed with [chezmoi](https://www.chezmoi.io/), with 1Password for 
 ## Quick Start
 
 ```bash
-# macOS / Linux
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/rudironsoni/dotfiles/main/scripts/bootstrap.sh)"
+# Install chezmoi and apply dotfiles
+chezmoi init --apply rudironsoni
 ```
 
 ## Supported Operating Systems
@@ -52,28 +51,28 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/rudironsoni/dotfiles/main/
 
 - `curl` or `wget` installed
 - `sudo` access (for package installation)
-- 1Password CLI (for secrets)
+- 1Password account (CLI installed automatically)
 
 ## Installation
 
-### One-Command Bootstrap
+### Quick Install
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/rudironsoni/dotfiles/main/scripts/bootstrap.sh)"
+# Install chezmoi (if not already installed)
+sh -c "$(curl -fsLS get.chezmoi.io)"
+
+# Initialize and apply dotfiles
+chezmoi init --apply rudironsoni
 ```
 
-### Manual Installation
+### Alternative Methods
 
 ```bash
-# Install chezmoi
-sh -c "$(curl -fsLS get.chezmoi.io)"
-export PATH="$HOME/.local/bin:$PATH"
-
-# Initialize dotfiles
-chezmoi init --apply rudironsoni
-
-# Or using SSH
+# Using SSH
 chezmoi init --apply git@github.com:rudironsoni/dotfiles.git
+
+# First install chezmoi manually, then apply
+# See: https://www.chezmoi.io/install/
 ```
 
 ## Features
@@ -95,24 +94,11 @@ chezmoi init --apply git@github.com:rudironsoni/dotfiles.git
 
 ### Development Tools
 
-- **Neovim** with Lazy.nvim, LSP, Treesitter, Telescope
 - **tmux** with TPM-Redux plugin manager
 - **Git** with lazygit terminal UI
 - **GitHub CLI** with full configuration
 
-**Neovim Keybindings:**
-
-| Key | Action |
-|-----|--------|
-| `<Space>` | Leader key |
-| `<Space>ff` | Find files |
-| `<Space>fg` | Live grep |
-| `<Space>fb` | Buffers |
-| `<Space>ee` | Toggle file explorer |
-| `<Space>gd` | Go to definition |
-| `K` | Hover documentation |
-
-**tmux Keybindings (Prefix: `Ctrl+B`):**
+**tmux Keybindings (Prefix: `Ctrl+B`):
 
 | Key | Action |
 |-----|--------|
@@ -152,12 +138,6 @@ chezmoi init --apply git@github.com:rudironsoni/dotfiles.git
 | `pp` | Paste |
 | `zh` | Toggle hidden files |
 
-### AI Assistants
-
-- **Claude Code** with skills, commands, and hooks
-- **Codex CLI** with AGENTS.md
-- **OpenCode** with custom skills
-
 ### Security
 
 - **1Password** integration for secrets
@@ -166,20 +146,30 @@ chezmoi init --apply git@github.com:rudironsoni/dotfiles.git
 
 ## 1Password Integration
 
-1Password is the primary method for managing secrets in these dotfiles.
+1Password is the primary method for managing secrets in these dotfiles. The CLI is installed automatically during `chezmoi init` via the `hooks.read-source-state.pre` hook.
 
-### Setup
+### Automatic Installation
+
+1Password CLI is installed **before** chezmoi reads your source state, ensuring secrets are available for templates.
 
 ```bash
-# Install 1Password CLI
-brew install 1password-cli  # macOS
-# or follow: https://developer.1password.com/docs/cli/get-started/
+# The hook runs automatically during init
+chezmoi init --apply rudironsoni
+
+# Verify installation
+chezmoi doctor | grep 1password
+```
+
+**Supported platforms:** macOS (Homebrew), Debian/Ubuntu (apt), Fedora/RHEL (dnf), Windows (winget). Arch and openSUSE require manual installation.
+
+### Manual Installation (if needed)
+
+```bash
+# macOS
+brew install 1password-cli
 
 # Sign in
 eval $(op signin)
-
-# Verify
-chezmoi doctor | grep 1password
 ```
 
 ### Required 1Password Items
@@ -252,21 +242,20 @@ dotfiles/
 ├── .chezmoi.toml.tmpl           # Chezmoi configuration with prompts
 ├── .chezmoiexternal.toml        # External dependencies (TPM, plugins)
 ├── .chezmoidata.yaml            # Machine-specific data
+├── .chezmoidata/                # Declarative configuration
+│   └── packages.yaml            # Package definitions (OS-specific)
 ├── .chezmoiignore               # OS-specific exclusions
 ├── home/                        # Source state (dotfiles content)
 │   ├── dot_zshrc.tmpl
 │   ├── dot_bashrc.tmpl
 │   ├── dot_config/
-│   │   ├── nvim/init.lua        # Neovim config
 │   │   ├── tmux/tmux.conf       # Tmux + TPM-Redux
 │   │   ├── btop/btop.conf       # System monitor
 │   │   ├── ranger/rc.conf       # File manager
 │   │   └── oh-my-posh/          # Shell prompt
-│   ├── dot_claude/              # Claude Code config
-│   ├── dot_codex/               # Codex CLI config
 │   └── .chezmoiscripts/         # Auto-install scripts
+│       └── run_onchange_*       # Declarative package installers
 ├── scripts/
-│   ├── bootstrap.sh             # One-command setup
 │   └── test-docker.sh           # Docker test runner
 └── tests/                       # Docker tests
     ├── Dockerfile.linux         # Ubuntu base
@@ -293,17 +282,19 @@ eval $(op signin)
 chezmoi apply
 ```
 
-### 2. Set up Shell
+### 2. Shell Configuration (Already Applied)
+
+Zsh is configured as the default shell during `chezmoi init`. To verify or change:
 
 ```bash
-# Zsh (macOS default)
-chsh -s /bin/zsh
+# Check current shell
+echo $SHELL
 
-# Bash
-chsh -s /bin/bash
+# Switch to Zsh (default)
+chsh -s $(which zsh)
 
-# Fish
-chsh -s $(which fish)
+# Or switch to Bash if preferred
+chsh -s $(which bash)
 ```
 
 ### 3. Install tmux Plugins
@@ -313,17 +304,7 @@ chsh -s $(which fish)
 # Default prefix is Ctrl+B
 ```
 
-### 4. Set up Neovim
-
-```bash
-# Open Neovim - plugins install automatically on first run
-nvim
-
-# Run :checkhealth to verify setup
-# Run :Mason to install language servers
-```
-
-### 5. Configure Git
+### 4. Configure Git
 
 ```bash
 # Edit local data
@@ -336,17 +317,31 @@ chezmoi init --promptString name="Your Name"
 
 ## Platform-Specific Notes
 
+### Package Management (Declarative)
+
+Packages are defined in `.chezmoidata/packages.yaml` and installed automatically via `run_onchange_` scripts. When you modify the package list, chezmoi will re-run the installation script on next apply.
+
+**Adding packages:**
+
+```bash
+# Edit the package list
+chezmoi edit .chezmoidata/packages.yaml
+
+# Apply changes - packages will be installed automatically
+chezmoi apply
+```
+
 ### macOS
 
-- Homebrew packages are installed automatically via chezmoiscripts
+- Homebrew packages are installed declaratively from `.chezmoidata/packages.yaml`
 - 1Password CLI is installed automatically
 - Oh My Posh is installed for prompt customization
 
 ### Linux
 
 - Package manager is auto-detected (apt, dnf, pacman, zypper)
-- Chezmoi is installed if not present
-- Additional tools are installed via the chezmoiscript
+- Packages installed declaratively from `.chezmoidata/packages.yaml`
+- See: [Install packages declaratively](https://www.chezmoi.io/user-guide/advanced/install-packages-declaratively/)
 
 ### WSL (Windows Subsystem for Linux)
 
@@ -430,9 +425,7 @@ private_dot_ssh/config
 | File | Reason | Alternative |
 |------|--------|-------------|
 | `~/.copilot/config.json` | OAuth tokens | Authenticate with `gh auth login` |
-| `~/.claude/.credentials.json` | API keys | Re-authenticate on new machine |
 | `~/.config/gh/hosts.yml` | GitHub auth tokens | Use `gh auth login` |
-| `~/.config/opencode/antigravity-accounts.json` | Account tokens | Re-authenticate |
 
 ### CI/CD Security
 

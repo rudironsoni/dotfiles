@@ -1,9 +1,20 @@
 # Machine-specific data for templates
 # https://www.chezmoi.io/reference/templates/chezmoi-data/
 
-# Default values (can be overridden per machine)
-email: "{{ .chezmoi.username }}@example.com"
-shell: "{{ .chezmoi.os }}"
+# User information - One source of truth
+name: "Rudimar Ronsoni"
+email: "rudimar@outlook.com"
+
+# Shell preference
+shell: "zsh"
+shell_alt: "bash"
+
+# OS-specific detection
+# Available variables:
+#   .chezmoi.os         - linux, darwin, windows, freebsd
+#   .chezmoi.arch      - arm64, amd64, x86, etc.
+#   .chezmoi.hostname  - machine hostname
+#   .chezmoi.username  - current username
 
 # OS-specific detection
 # Available variables:

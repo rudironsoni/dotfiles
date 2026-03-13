@@ -1,0 +1,76 @@
+#!/usr/bin/env pwsh
+# Declarative package installation for Windows
+# Runs when .chezmoidata/packages.yaml changes
+# https://www.chezmoi.io/user-guide/advanced/install-packages-declaratively/
+
+#Requires -RunAsAdministrator
+
+param(
+    [switch]$Force
+)
+
+$ErrorActionPreference = "Stop"
+
+Write-Host "=== Installing packages for Windows (declarative) ===" -ForegroundColor Cyan
+
+# Check if winget is available
+if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+    Write-Error "winget not found. Please install App Installer from Microsoft Store."
+    exit 1
+}
+
+# Install winget packages from declarative list
+{{ range .packages.windows.winget -}}
+$packageId = "{{ .id }}"
+$packageName = "{{ .name }}"
+
+Write-Host "Checking $packageName..." -NoNewline
+
+$installed = winget list --id $packageId --exact 2>$null | Select-String $packageId
+
+if ($installed) {
+    Write-Host " already installed" -ForegroundColor Green
+} else {
+    Write-Host " installing..." -ForegroundColor Yellow
+    try {
+        winget install --id $packageId --exact --accept-source-agreements --accept-package-agreements
+        Write-Host "  Installed $packageName" -ForegroundColor Green
+    } catch {
+        Write-Warning "Failed to install $packageName`: $_"
+    }
+}
+{{ end -}}
+
+# Install Scoop packages if Scoop is available
+if (Get-Command scoop -ErrorAction SilentlyContinue) {
+    Write-Host "Installing Scoop packages..." -ForegroundColor Cyan
+    
+    {{ range .packages.windows.scoop -}}
+    $pkg = "{{ . }}"
+    try {
+        scoop install $pkg
+        Write-Host "  Installed $pkg" -ForegroundColor Green
+    } catch {
+        Write-Warning "Failed to install $pkg via Scoop`: $_"
+    }
+    {{ end -}}
+}
+
+# Configure PowerShell execution policy
+Write-Host "Configuring PowerShell execution policy..." -ForegroundColor Cyan
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+
+# Install PowerShell modules
+$modules = @(
+    "PSReadLine"
+    "Terminal-Icons"
+)
+
+foreach ($module in $modules) {
+    if (-not (Get-Module -ListAvailable -Name $module)) {
+        Write-Host "Installing PowerShell module: $module" -ForegroundColor Yellow
+        Install-Module -Name $module -Scope CurrentUser -Force -AllowClobber
+    }
+}
+
+Write-Host "=== Windows package installation complete ===" -ForegroundColor Green

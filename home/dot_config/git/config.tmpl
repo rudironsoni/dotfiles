@@ -3,9 +3,9 @@
 # https://git-scm.com/docs/git-config
 
 [user]
-    # Email and name - can be overridden per machine
-    email = "{{ .chezmoi.username }}@example.com"
-    name = "{{ .chezmoi.username }}"
+    # Email and name - centralized from .chezmoidata.yaml
+    email = "{{ .email }}"
+    name = "{{ .name }}"
 
 [core]
     # Editor

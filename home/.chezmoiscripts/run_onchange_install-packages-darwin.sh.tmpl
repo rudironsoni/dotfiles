@@ -1,0 +1,46 @@
+#!/bin/bash
+# Declarative package installation for macOS
+# Runs when .chezmoidata/packages.yaml changes
+# https://www.chezmoi.io/user-guide/advanced/install-packages-declaratively/
+
+set -euo pipefail
+
+echo "=== Installing packages for macOS (declarative) ==="
+
+# Check if Homebrew is installed
+if ! command -v brew &> /dev/null; then
+    echo "Homebrew not found. Installing..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    # Add Homebrew to PATH for this session
+    if [[ -f /opt/homebrew/bin/brew ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -f /usr/local/bin/brew ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
+fi
+
+echo "Updating Homebrew..."
+brew update
+
+# Install packages from declarative list
+{{ range .packages.darwin.brews -}}
+if brew list "{{ . }}" &> /dev/null; then
+    echo "  ✓ {{ . }} already installed"
+else
+    echo "  → Installing {{ . }}..."
+    brew install "{{ . }}" || echo "  ⚠ Failed to install {{ . }} (may be optional)"
+fi
+{{ end -}}
+
+# Install casks if any
+{{ range .packages.darwin.casks -}}
+if brew list --cask "{{ . }}" &> /dev/null; then
+    echo "  ✓ {{ . }} (cask) already installed"
+else
+    echo "  → Installing {{ . }} (cask)..."
+    brew install --cask "{{ . }}" || echo "  ⚠ Failed to install {{ . }}"
+fi
+{{ end -}}
+
+echo "=== macOS package installation complete ==="
