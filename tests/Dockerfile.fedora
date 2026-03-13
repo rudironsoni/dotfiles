@@ -55,6 +55,12 @@ WORKDIR /home/testuser
 # Set environment
 ENV HOME=/home/testuser
 ENV USER=testuser
+ENV OP_SERVICE_ACCOUNT_TOKEN=""
+
+# Copy entrypoint script
+COPY tests/docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Default command
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["bash"]

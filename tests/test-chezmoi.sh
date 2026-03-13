@@ -57,14 +57,25 @@ test_chezmoi_installed() {
     fi
 }
 
-# Test: Check 1Password CLI is installed
+# Test: Check 1Password CLI is installed and authenticated
 test_1password_installed() {
-    log_info "Testing: 1Password CLI is installed"
+    log_info "Testing: 1Password CLI is installed and authenticated"
 
     if command -v op &> /dev/null; then
         local version
         version=$(op --version)
-        log_success "1Password CLI installed: ${version}"
+        
+        # Check if service account token is available
+        if [ -n "$OP_SERVICE_ACCOUNT_TOKEN" ]; then
+            export OP_ACCOUNT="my.1password.com"
+            if op vault list >/dev/null 2>&1; then
+                log_success "1Password CLI installed and authenticated: ${version}"
+            else
+                log_error "1Password CLI installed but authentication failed"
+            fi
+        else
+            log_warning "1Password CLI installed but OP_SERVICE_ACCOUNT_TOKEN not set"
+        fi
     else
         log_error "1Password CLI not installed (required)"
     fi
@@ -272,19 +283,15 @@ test_external_deps() {
     fi
 }
 
-# Test: Bootstrap script syntax
-test_bootstrap_script() {
-    log_info "Testing: Bootstrap script syntax"
+# Test: Scripts directory
+test_scripts_directory() {
+    log_info "Testing: Scripts directory"
 
-    local bootstrap_script="${SOURCE_DIR}/scripts/bootstrap.sh"
-    if [ -f "$bootstrap_script" ]; then
-        if bash -n "$bootstrap_script" 2>/dev/null; then
-            log_success "Bootstrap script syntax valid"
-        else
-            log_error "Bootstrap script has syntax errors"
-        fi
+    local scripts_dir="${SOURCE_DIR}/scripts"
+    if [ -d "$scripts_dir" ]; then
+        log_info "Scripts directory exists"
     else
-        log_warning "Bootstrap script not found"
+        log_info "Scripts directory not found (removed)"
     fi
 }
 
@@ -405,7 +412,7 @@ main() {
 
     test_config_files
     test_external_deps
-    test_bootstrap_script
+    test_scripts_directory
     test_chezmoi_config
     test_package_scripts
 

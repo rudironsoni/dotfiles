@@ -18,6 +18,11 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 SOURCE_DIR="${1:-${PROJECT_ROOT}}"
 HOME_DIR="${HOME:-/home/testuser}"
 
+# Configure 1Password if service account token is available
+if [ -n "$OP_SERVICE_ACCOUNT_TOKEN" ]; then
+    export OP_ACCOUNT="my.1password.com"
+fi
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'

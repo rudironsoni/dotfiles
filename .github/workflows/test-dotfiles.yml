@@ -10,12 +10,23 @@ jobs:
   # Native platform tests (no Docker)
   test-linux-native:
     runs-on: ubuntu-latest
+    env:
+      OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install chezmoi
         run: sh -c "$(curl -fsLS get.chezmoi.io)"
+
+      - name: Install 1Password CLI
+        run: |
+          curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+            sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | \
+            sudo tee /etc/apt/sources.list.d/1password.list
+          sudo apt-get update
+          sudo apt-get install -y 1password-cli
 
       - name: Initialize chezmoi with source
         run: |
@@ -34,12 +45,18 @@ jobs:
 
   test-macos-native:
     runs-on: macos-latest
+    env:
+      OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install chezmoi
         run: sh -c "$(curl -fsLS get.chezmoi.io)"
+
+      - name: Install 1Password CLI
+        run: |
+          brew install 1password-cli
 
       - name: Initialize chezmoi with source
         run: |
@@ -53,6 +70,8 @@ jobs:
 
   test-windows-native:
     runs-on: windows-latest
+    env:
+      OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -62,6 +81,11 @@ jobs:
           $uri = 'https://get.chezmoi.io/ps1'
           $script = Invoke-RestMethod -Uri $uri
           Invoke-Expression "$script -d $HOME\.local\bin"
+
+      - name: Install 1Password CLI
+        run: |
+          winget install --id AgileBits.1Password.CLI -e --accept-source-agreements --accept-package-agreements
+        shell: pwsh
 
       - name: Initialize chezmoi with source
         run: |
@@ -113,6 +137,7 @@ jobs:
             -v "$(pwd):/home/testuser/dotfiles:ro" \
             -e "TEST_MODE=true" \
             -e "CI=true" \
+            -e "OP_SERVICE_ACCOUNT_TOKEN=${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}" \
             ${{ matrix.image }} \
             bash -c "cd /home/testuser/dotfiles && bash tests/test-chezmoi.sh"
 
@@ -122,6 +147,7 @@ jobs:
             -v "$(pwd):/home/testuser/dotfiles:ro" \
             -e "TEST_MODE=true" \
             -e "CI=true" \
+            -e "OP_SERVICE_ACCOUNT_TOKEN=${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}" \
             ${{ matrix.image }} \
             bash -c "cd /home/testuser/dotfiles && bash tests/validate-templates.sh /home/testuser/dotfiles" \
             || echo "Validation completed with warnings"
@@ -131,6 +157,7 @@ jobs:
         run: |
           docker run --rm \
             -v "$(pwd):/home/testuser/dotfiles:ro" \
+            -e "OP_SERVICE_ACCOUNT_TOKEN=${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}" \
             ${{ matrix.image }} \
             bash -c "cd /home/testuser/dotfiles && chezmoi execute-template < home/dot_zshrc.tmpl > /dev/null && echo 'Template renders successfully'"
 
@@ -138,18 +165,30 @@ jobs:
         run: |
           docker run --rm \
             -v "$(pwd):/home/testuser/dotfiles:ro" \
+            -e "OP_SERVICE_ACCOUNT_TOKEN=${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}" \
             ${{ matrix.image }} \
             bash -c "cd /home/testuser/dotfiles && chezmoi init --source /home/testuser/dotfiles test@test.com && chezmoi apply --dry-run"
 
   # Template validation across all platforms
   validate-templates:
     runs-on: ubuntu-latest
+    env:
+      OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install chezmoi
         run: sh -c "$(curl -fsLS get.chezmoi.io)"
+
+      - name: Install 1Password CLI
+        run: |
+          curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+            sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | \
+            sudo tee /etc/apt/sources.list.d/1password.list
+          sudo apt-get update
+          sudo apt-get install -y 1password-cli
 
       - name: Install dependencies
         run: |
