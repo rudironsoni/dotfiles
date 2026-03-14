@@ -9,27 +9,76 @@ email: "rudimar@outlook.com"
 shell: "zsh"
 shell_alt: "bash"
 
-# OS-specific detection
-# Available variables:
-#   .chezmoi.os         - linux, darwin, windows, freebsd
-#   .chezmoi.arch      - arm64, amd64, x86, etc.
-#   .chezmoi.hostname  - machine hostname
-#   .chezmoi.username  - current username
-
-# OS-specific detection
-# Available variables:
-#   .chezmoi.os         - linux, darwin, windows, freebsd
-#   .chezmoi.arch      - arm64, amd64, x86, etc.
-#   .chezmoi.hostname  - machine hostname
-#   .chezmoi.username  - current username
-
-# Example machine-specific overrides (uncomment and customize):
-# machines:
-#   work-laptop:
-#     os: darwin
-#     shell: zsh
-#     email: work@example.com
-#   home-desktop:
-#     os: linux
-#     shell: bash
-#     email: home@example.com
+# Package definitions (merged from packages.yaml)
+packages:
+  darwin:
+    brews:
+      - chezmoi
+      - git
+      - curl
+      - wget
+      - zsh
+      - bash
+      - vim
+      - oh-my-posh
+      - tmux
+      - fzf
+      - ripgrep
+      - fd
+      - bat
+      - eza
+      - btop
+      - gh
+      - lazygit
+    casks: []
+  linux:
+    common:
+      - git
+      - curl
+      - wget
+      - zsh
+      - bash
+      - vim
+      - tmux
+      - fzf
+      - btop
+    apt:
+      - ripgrep
+      - fd-find
+      - bat
+      - eza
+      - gh
+    dnf:
+      - ripgrep
+      - fd-find
+      - bat
+      - eza
+      - gh
+      - lazygit
+    pacman:
+      - ripgrep
+      - fd
+      - bat
+      - eza
+      - github-cli
+      - lazygit
+    zypper:
+      - ripgrep
+      - fd
+      - bat
+      - eza
+  windows:
+    winget:
+      - { id: twpayne.chezmoi, name: Chezmoi }
+      - { id: Git.Git, name: Git }
+      - { id: Microsoft.WindowsTerminal, name: Windows Terminal }
+      - { id: JanDeDobbeleer.OhMyPosh, name: Oh My Posh }
+      - { id: fzf, name: fzf }
+      - { id: BurntSushi.ripgrep.MSVC, name: ripgrep }
+      - { id: sharkdp.fd, name: fd }
+      - { id: sharkdp.bat, name: bat }
+      - { id: eza-community.eza, name: eza }
+      - { id: GitHub.cli, name: GitHub CLI }
+      - { id: JesseDuffield.lazygit, name: lazygit }
+    scoop:
+      - btop
