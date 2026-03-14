@@ -79,7 +79,7 @@ chezmoi init --apply git@github.com:rudironsoni/dotfiles.git
 
 ### Shell Environment
 
-- **Zsh** with Oh My Posh prompt, syntax highlighting, auto-suggestions
+- **Zsh** with Oh My Posh prompt, syntax highlighting, auto-suggestions, and 50+ plugins
 - **Bash** with modern configuration
 - **PowerShell** for Windows
 
@@ -91,6 +91,109 @@ chezmoi init --apply git@github.com:rudironsoni/dotfiles.git
 | `Ctrl+T` | FZF file search |
 | `Alt+C` | FZF directory search |
 | `↑/↓` | Search history by prefix |
+
+### Zsh Plugins
+
+#### Core Plugins
+
+| Plugin | Repository | Description |
+|--------|------------|-------------|
+| zsh-autosuggestions | [zsh-users/zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) | Fish-like auto-suggestions |
+| zsh-syntax-highlighting | [zsh-users/zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | Syntax highlighting for commands |
+| zsh-completions | [zsh-users/zsh-completions](https://github.com/zsh-users/zsh-completions) | Additional completion definitions |
+| fzf-tab | [Aloxaf/fzf-tab](https://github.com/Aloxaf/fzf-tab) | FZF-powered tab completions |
+| colorize | [zpm-zsh/colorize](https://github.com/zpm-zsh/colorize) | Colorize command output |
+
+#### Development & Git Plugins
+
+| Plugin | Repository | Description | Dependencies |
+|--------|------------|-------------|--------------|
+| fd-zsh | [MohamedElashri/fd-zsh](https://github.com/MohamedElashri/fd-zsh) | fd integration | `fd` |
+| zsh-fzf-packagemanager | [goarano/zsh-fzf-packagemanager](https://github.com/goarano/zsh-fzf-packagemanager) | Package manager with fzf | `fzf` |
+| jq-zsh-plugin | [reegnz/jq-zsh-plugin](https://github.com/reegnz/jq-zsh-plugin) | jq completions | `jq` |
+| zsh-fzf-git-worktree | [banyan/zsh-fzf-git-worktree](https://github.com/banyan/zsh-fzf-git-worktree) | Git worktree with fzf | `git`, `fzf` |
+| git-fuzzy | [bigH/git-fuzzy](https://github.com/bigH/git-fuzzy) | Fuzzy git operations | `git`, `fzf` |
+| zsh-poetry | [fourdim/zsh-poetry](https://github.com/fourdim/zsh-poetry) | Poetry completions | `poetry` |
+| zsh-pytest-fzf | [jszczepaniak/zsh-pytest-fzf](https://github.com/jszczepaniak/zsh-pytest-fzf) | Pytest with fzf | `pytest`, `fzf` |
+| zsh-you-should-use | [MichaelAquilina/zsh-you-should-use](https://github.com/MichaelAquilina/zsh-you-should-use) | Reminds of available aliases |
+| zman | [mattmc3/zman](https://github.com/mattmc3/zman) | Zsh help pages |
+
+#### Kubernetes & Cloud Plugins
+
+| Plugin | Repository | Description | Dependencies |
+|--------|------------|-------------|--------------|
+| k3d-oh-my-zsh-plugin | [dwaynebradley/k3d-oh-my-zsh-plugin](https://github.com/dwaynebradley/k3d-oh-my-zsh-plugin) | k3d completions | `k3d` |
+| zsh-k9s | [acidix/zsh-k9s](https://github.com/acidix/zsh-k9s) | k9s completions | `k9s` |
+| zsh-helmfile | [relkli/zsh-helmfile](https://github.com/relkli/zsh-helmfile) | Helmfile completions | `helmfile` |
+| zsh-kind | [TomerFi/zsh-kind](https://github.com/TomerFi/zsh-kind) | Kind completions | `kind` |
+| kompose | [gantsign/zsh-plugins](https://github.com/gantsign/zsh-plugins/tree/master/kompose) | Kompose completions | `kompose` |
+| kubectl-fzf | [bonnefoa/kubectl-fzf](https://github.com/bonnefoa/kubectl-fzf) | kubectl with fzf | `kubectl`, `fzf` |
+| oh-my-kustomize | [ralgozino/oh-my-kustomize](https://github.com/ralgozino/oh-my-kustomize) | Kustomize completions | `kustomize` |
+| talosctl-zsh-plugin | [mephs/talosctl-zsh-plugin](https://github.com/mephs/talosctl-zsh-plugin) | Talosctl completions | `talosctl` |
+
+#### Docker & Container Plugins
+
+| Plugin | Repository | Description | Dependencies |
+|--------|------------|-------------|--------------|
+| docker-zsh-completion | [greymd/docker-zsh-completion](https://github.com/greymd/docker-zsh-completion) | Docker completions | `docker` |
+| ctop | [gantsign/zsh-plugins](https://github.com/gantsign/zsh-plugins/tree/master/ctop) | ctop completions | `ctop` |
+
+#### CLI Tool Completions
+
+| Plugin | Repository | Description | Dependencies |
+|--------|------------|-------------|--------------|
+| 1password-op.plugin.zsh | [unixorn/1password-op.plugin.zsh](https://github.com/unixorn/1password-op.plugin.zsh) | 1Password CLI completions | `op` |
+| zsh-bash-completions-fallback | [3v1n0/zsh-bash-completions-fallback](https://github.com/3v1n0/zsh-bash-completions-fallback) | Bash completions in Zsh |
+| claude-code-zsh-completion | [1160054/claude-code-zsh-completion](https://github.com/1160054/claude-code-zsh-completion) | Claude Code completions | `claude` |
+| zsh-chezmoi | [mass8326/zsh-chezmoi](https://github.com/mass8326/zsh-chezmoi) | Chezmoi completions | `chezmoi` |
+| cod | [dim-an/cod](https://github.com/dim-an/cod) | Completion daemon | `cod` |
+| zsh-completion-sync | [BronzeDeer/zsh-completion-sync](https://github.com/BronzeDeer/zsh-completion-sync) | Sync completions |
+| copilot.zsh | [scaryrawr/copilot.zsh](https://github.com/scaryrawr/copilot.zsh) | GitHub Copilot CLI completions | `gh` |
+| zsh-fancy-completions | [z-shell/zsh-fancy-completions](https://github.com/z-shell/zsh-fancy-completions) | Fancy completion UI |
+| fzf-zsh-completions | [chitoku-k/fzf-zsh-completions](https://github.com/chitoku-k/fzf-zsh-completions) | FZF-based completions | `fzf` |
+| zsh-justfile | [JBarberU/zsh-justfile](https://github.com/JBarberU/zsh-justfile) | Justfile completions | `just` |
+| kafka-zsh-completions | [Dabz/kafka-zsh-completions](https://github.com/Dabz/kafka-zsh-completions) | Kafka completions | `kafka` |
+| ngrok.plugin.zsh | [bostonaholic/ngrok.plugin.zsh](https://github.com/bostonaholic/ngrok.plugin.zsh) | ngrok completions | `ngrok` |
+| zsh-ollama-completion | [Katrovsky/zsh-ollama-completion](https://github.com/Katrovsky/zsh-ollama-completion) | Ollama completions | `ollama` |
+| zsh-uv | [lipov3cz3k/zsh-uv](https://github.com/lipov3cz3k/zsh-uv) | uv completions | `uv` |
+| zsh-mise | [wintermi/zsh-mise](https://github.com/wintermi/zsh-mise) | mise completions | `mise` |
+
+#### SSH & System Plugins
+
+| Plugin | Repository | Description |
+|--------|------------|-------------|
+| zsh-ssh-agent | [sdiebolt/zsh-ssh-agent](https://github.com/sdiebolt/zsh-ssh-agent) | SSH agent management |
+| ssh-host | [obolientsev/ssh-host](https://github.com/obolientsev/ssh-host) | SSH host completions |
+| zsh-ssh | [sunlei/zsh-ssh](https://github.com/sunlei/zsh-ssh) | Enhanced SSH completions |
+| xdg-basedirs | [krahlos/xdg-basedirs](https://github.com/krahlos/xdg-basedirs) | XDG directories support |
+
+#### Productivity Plugins
+
+| Plugin | Repository | Description |
+|--------|------------|-------------|
+| zsh-opencode-tab | [alberti42/zsh-opencode-tab](https://github.com/alberti42/zsh-opencode-tab) | OpenCode tab completion |
+| zsh-indent-control | [alberti42/zsh-indent-control](https://github.com/alberti42/zsh-indent-control) | Smart indentation |
+
+#### macOS-Only Plugins
+
+| Plugin | Repository | Description |
+|--------|------------|-------------|
+| zsh-xcode-completions | [keith/zsh-xcode-completions](https://github.com/keith/zsh-xcode-completions) | Xcode completions |
+| zsh-completions | [danydodson/zsh-completions](https://github.com/danydodson/zsh-completions) | Additional completions |
+
+### tmux Plugins
+
+| Plugin | Repository | Description |
+|--------|------------|-------------|
+| TPM-Redux | [RyanMacG/tpm-redux](https://github.com/RyanMacG/tpm-redux) | Plugin manager |
+| tmux-sensible | [tmux-plugins/tmux-sensible](https://github.com/tmux-plugins/tmux-sensible) | Sensible defaults |
+| tmux-yank | [tmux-plugins/tmux-yank](https://github.com/tmux-plugins/tmux-yank) | Clipboard integration |
+| tmux-menus | [jaclu/tmux-menus](https://github.com/jaclu/tmux-menus) | Interactive menus |
+| tmux-logging | [tmux-plugins/tmux-logging](https://github.com/tmux-plugins/tmux-logging) | Session logging |
+| tmux-resurrect | [tmux-plugins/tmux-resurrect](https://github.com/tmux-plugins/tmux-resurrect) | Save/restore sessions |
+| tmux-continuum | [tmux-plugins/tmux-continuum](https://github.com/tmux-plugins/tmux-continuum) | Auto-save/restore |
+| tmux-ssh-syncing | [alberti42/tmux-ssh-syncing](https://github.com/alberti42/tmux-ssh-syncing) | SSH session syncing |
+| tmux-fzf-links | [alberti42/tmux-fzf-links](https://github.com/alberti42/tmux-fzf-links) | FZF link opening |
 
 ### Development Tools
 
@@ -319,21 +422,75 @@ chezmoi init --promptString name="Your Name"
 
 ### Package Management (Declarative)
 
-Packages are defined in `.chezmoidata/packages.yaml` and installed automatically via `run_onchange_` scripts. When you modify the package list, chezmoi will re-run the installation script on next apply.
+Packages are defined in `.chezmoidata.yaml` and installed automatically via `run_onchange_` scripts. When you modify the package list, chezmoi will re-run the installation script on next apply.
 
 **Adding packages:**
 
 ```bash
 # Edit the package list
-chezmoi edit .chezmoidata/packages.yaml
+chezmoi edit .chezmoidata.yaml
 
 # Apply changes - packages will be installed automatically
 chezmoi apply
 ```
 
+### Installed Packages by Platform
+
+#### macOS (Homebrew)
+
+**Core Tools:**
+- `chezmoi` - Dotfiles manager
+- `git` - Version control
+- `zsh` / `bash` - Shells
+- `vim` - Editor
+
+**Modern Unix Tools:**
+- `fzf` - Fuzzy finder
+- `ripgrep` - Fast grep
+- `fd` - Fast file finder
+- `bat` - Syntax-highlighted cat
+- `eza` - Modern ls replacement
+- `btop` - System monitor
+- `gh` - GitHub CLI
+- `lazygit` - TUI for git
+- `jq` - JSON processor
+
+**Development Tools:**
+- `oh-my-posh` - Prompt customization
+- `tmux` - Terminal multiplexer
+- `skaffold` - Kubernetes development
+- `k3d` - k3s in Docker
+- `k9s` - Kubernetes TUI
+- `mise` - Polyglot tool version manager
+- `docker` - Container runtime
+- `docker-compose` - Docker composition
+- `kubectl` - Kubernetes CLI
+- `helm` - Kubernetes package manager
+- `just` - Command runner
+- `poetry` - Python dependency management
+- `ngrok` - Tunneling service
+- `ollama` - LLM runner
+
+#### Linux (APT/DNF/Pacman/Zypper)
+
+**Common (all distros):**
+- `git`, `zsh`, `bash`, `vim`, `tmux`, `fzf`, `btop`
+
+**APT (Debian/Ubuntu):**
+- `ripgrep`, `fd-find`, `bat`, `eza`, `gh`, `jq`, `skaffold`, `docker.io`, `docker-compose`, `kubectl`, `helm`, `ngrok`
+
+**DNF (Fedora/RHEL):**
+- `ripgrep`, `fd-find`, `bat`, `eza`, `gh`, `lazygit`
+
+**Pacman (Arch):**
+- `ripgrep`, `fd`, `bat`, `eza`, `github-cli`, `lazygit`
+
+**Zypper (openSUSE):**
+- `ripgrep`, `fd`, `bat`, `eza`
+
 ### macOS
 
-- Homebrew packages are installed declaratively from `.chezmoidata/packages.yaml`
+- Homebrew packages are installed declaratively from `.chezmoidata.yaml`
 - 1Password CLI is installed automatically
 - Oh My Posh is installed for prompt customization
 
