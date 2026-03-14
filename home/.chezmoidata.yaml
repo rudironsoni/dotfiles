@@ -84,6 +84,7 @@ packages:
       - kubectl
       - helm
       - ngrok
+      - python3-poetry
     dnf:
       - ripgrep
       - fd-find
@@ -91,6 +92,8 @@ packages:
       - eza
       - gh
       - lazygit
+      - ngrok
+      - poetry
     pacman:
       - ripgrep
       - fd
@@ -98,11 +101,15 @@ packages:
       - eza
       - github-cli
       - lazygit
+      - ngrok
+      - poetry
     zypper:
       - ripgrep
       - fd
       - bat
       - eza
+      - ngrok
+      - poetry
   windows:
     winget:
       - { id: twpayne.chezmoi, name: Chezmoi }
