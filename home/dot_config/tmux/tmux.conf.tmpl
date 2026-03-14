@@ -78,3 +78,17 @@ set -g status-left "#[bg=colour239,fg=colour252]"
 
 # Right status
 set -g status-right "#[bg=colour238,fg=colour244] %d %b %H:%M "
+
+###################################################
+
+# Navigation & Indexing
+
+# Set window and pane index to 1 (0 by default) for easier direct access
+set-option -g base-index 1
+setw -g pane-base-index 1
+
+# Move between windows and sessions
+bind-key -r h previous-window
+bind-key -r j switch-client -n
+bind-key -r k switch-client -p
+bind-key -r l next-window
