@@ -193,6 +193,11 @@ if [ -f "$HOME/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh" ]; then
     zstyle ':fzf-tab:complete:ls:*' fzf-preview 'cat $realpath'
 fi
 
+# colorize (colorize command output)
+if [ -f "$HOME/.config/zsh/plugins/colorize/colorize.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/colorize/colorize.plugin.zsh"
+fi
+
 # zsh-syntax-highlighting (must be sourced last)
 if [ -f "$HOME/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
     source "$HOME/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"

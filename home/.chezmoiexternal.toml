@@ -95,6 +95,12 @@
     url = "https://github.com/Aloxaf/fzf-tab"
     refreshPeriod = "168h"
 
+# zpm-zsh colorize plugin
+[".config/zsh/plugins/colorize"]
+    type = "git-repo"
+    url = "https://github.com/zpm-zsh/colorize"
+    refreshPeriod = "168h"
+
 # alberti42's zsh plugins
 [".config/zsh/plugins/zsh-opencode-tab"]
     type = "git-repo"
