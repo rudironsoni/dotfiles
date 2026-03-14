@@ -95,6 +95,28 @@
     url = "https://github.com/Aloxaf/fzf-tab"
     refreshPeriod = "168h"
 
+# alberti42's zsh plugins
+[".config/zsh/plugins/zsh-opencode-tab"]
+    type = "git-repo"
+    url = "https://github.com/alberti42/zsh-opencode-tab"
+    refreshPeriod = "168h"
+
+[".config/zsh/plugins/zsh-indent-control"]
+    type = "git-repo"
+    url = "https://github.com/alberti42/zsh-indent-control"
+    refreshPeriod = "168h"
+
+# alberti42's tmux plugins
+[".config/tmux/plugins/tmux-ssh-syncing"]
+    type = "git-repo"
+    url = "https://github.com/alberti42/tmux-ssh-syncing"
+    refreshPeriod = "168h"
+
+[".config/tmux/plugins/tmux-fzf-links"]
+    type = "git-repo"
+    url = "https://github.com/alberti42/tmux-fzf-links"
+    refreshPeriod = "168h"
+
 # ============================================================================
 # Optional: Neovim Plugin Manager (lazy.nvim)
 # ============================================================================
