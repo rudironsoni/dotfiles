@@ -223,7 +223,7 @@ alias cctt="claude --verbose --dangerously-skip-permissions --teammate-mode tmux
 # ============================================================================
 {{- if lookPath "op" }}
 # GitHub Personal Access Token
-export GITHUB_MCP_TOKEN={{ output "op" "read" "op://Personal/GitHub MCP Token/credential" | trim | quote }}
+export GITHUB_MCP_TOKEN={{ output "op" "read" "op://vault-prd/GitHub MCP Token/credential" | trim | quote }}
 export GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_MCP_TOKEN}
 
 # Synthetic API Key

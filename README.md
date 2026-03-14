@@ -176,11 +176,11 @@ eval $(op signin)
 
 Create these items in your Personal vault:
 
-| Item Name | Field | Purpose |
-|-----------|-------|---------|
-| `Service Account Token` | `credential` | 1Password service account for automation |
-| `GitHub MCP Token` | `credential` | GitHub Personal Access Token for MCP |
-| `Synthetic API Key` | `credential` | API key for synthetic.new Anthropic proxy (in vault-prd) |
+| Item Name | Vault | Field | Purpose |
+|-----------|-------|-------|---------|
+| `Service Account Token` | Private | `credential` | 1Password service account for automation |
+| `GitHub MCP Token` | vault-prd | `credential` | GitHub Personal Access Token for MCP |
+| `Synthetic API Key` | vault-prd | `credential` | API key for synthetic.new Anthropic proxy |
 
 **Setup commands:**
 
@@ -191,7 +191,7 @@ Create these items in your Personal vault:
 op item create --category="API Credential" --title="Service Account Token" --vault="Private" credential="ops_xxxxxxxxxxxxxxxx"
 
 # GitHub MCP Token
-op item create --category="API Credential" --title="GitHub MCP Token" --vault="Private" credential="ghp_xxxxxxxxxxxxxxxx"
+op item create --category="API Credential" --title="GitHub MCP Token" --vault="vault-prd" credential="ghp_xxxxxxxxxxxxxxxx"
 
 # Synthetic API Key (store in vault-prd vault)
 op item create --category="API Credential" --title="Synthetic API Key" --vault="vault-prd" credential="syn_xxxxxxxxxxxxxxxx"
@@ -201,7 +201,7 @@ op item create --category="API Credential" --title="Synthetic API Key" --vault="
 
 ```go-template
 {{- if lookPath "op" }}
-export GITHUB_MCP_TOKEN={{ output "op" "read" "op://Personal/GitHub MCP Token/credential" | trim | quote }}
+export GITHUB_MCP_TOKEN={{ output "op" "read" "op://vault-prd/GitHub MCP Token/credential" | trim | quote }}
 export SYNTHETIC_API_KEY={{ output "op" "read" "op://Personal/Synthetic API Key/credential" | trim | quote }}
 {{- end }}
 ```
