@@ -47,3 +47,34 @@ set -g @plugin 'alberti42/tmux-fzf-links'
 run ~/.config/tmux/plugins/tpm-redux/tpm
 
 ###################################################
+
+# STYLE
+
+# Pane seperation colors, i.e., lines between panes
+set -g pane-active-border-style 'fg=colour243'
+set -g pane-border-style 'fg=colour236'
+
+# Brighter text for active window pane
+set -g window-style 'fg=colour245'
+set -g window-active-style 'fg=colour252'
+
+# Add padding to window names, and visual flag for window activity
+set-option -g window-status-format ' #W#{?window_activity_flag,!,} ' 
+set-option -g window-status-separator ''
+
+# Default gray on gray status bar style
+set-option -g status-style bg=colour236,fg=colour248
+
+# Inactive window labels match the color of the status bar
+set-window-option -g window-status-style bg=colour236,fg=colour248
+
+# Active window label is slightly highlighted. Append -Z if a pane is zoomed.
+set-window-option -g window-status-current-style bg=colour24,fg=colour14
+set-window-option -g window-status-current-style bg=colour239,fg=colour251
+set-option -g window-status-current-format ' #W#{?window_zoomed_flag,-Z,} '
+
+# Left status
+set -g status-left "#[bg=colour239,fg=colour252]"
+
+# Right status
+set -g status-right "#[bg=colour238,fg=colour244] %d %b %H:%M "
