@@ -53,10 +53,6 @@ zstyle ':completion:*' group-name ''
 # Show descriptions for completions
 zstyle ':completion:*:descriptions' format '%B%d%b'
 
-# Autocomplete configuration
-zstyle ':autocomplete:*' default-context history-incremental-search-backward
-zstyle ':autocomplete:*' min-input 1
-
 # ============================================================================
 # PATH Configuration
 # ============================================================================
@@ -475,8 +471,12 @@ test -e "$HOME/.shellfishrc" && source "$HOME/.shellfishrc"
 export OPENCODE_PORT=4096
 
 # ============================================================================
-# Keybindings (Must be last to override any plugin defaults)
+# Keybindings and Autocomplete (Must be last to override any plugin defaults)
 # ============================================================================
+# Autocomplete configuration
+zstyle ':autocomplete:*' default-context history-incremental-search-backward
+zstyle ':autocomplete:*' min-input 1
+
 # History search with prefix matching
 # Type "cd" and press Up to search history for "cd ..." commands
 bindkey "^[[A" history-beginning-search-backward
