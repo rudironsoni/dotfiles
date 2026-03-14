@@ -46,6 +46,10 @@ packages:
       - btop
       - gh
       - lazygit
+      - jq
+      - k3d
+      - k9s
+      - mise
     casks: []
   linux:
     common:
@@ -64,6 +68,7 @@ packages:
       - bat
       - eza
       - gh
+      - jq
     dnf:
       - ripgrep
       - fd-find

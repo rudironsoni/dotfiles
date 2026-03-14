@@ -198,9 +198,9 @@ if [ -f "$HOME/.config/zsh/plugins/colorize/colorize.plugin.zsh" ]; then
     source "$HOME/.config/zsh/plugins/colorize/colorize.plugin.zsh"
 fi
 
-# fast-syntax-highlighting (better/faster syntax highlighting, must be sourced last)
-if [ -f "$HOME/.config/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ]; then
-    source "$HOME/.config/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+# zsh-syntax-highlighting (must be sourced last)
+if [ -f "$HOME/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
 # zsh-opencode-tab (OpenCode tab completion)
@@ -216,6 +216,66 @@ fi
 # fd-zsh (fd command aliases and completions)
 if [ -f "$HOME/.config/zsh/plugins/fd-zsh/fd-zsh.plugin.zsh" ]; then
     source "$HOME/.config/zsh/plugins/fd-zsh/fd-zsh.plugin.zsh"
+fi
+
+# zsh-fzf-packagemanager (package manager integration with fzf)
+if [ -f "$HOME/.config/zsh/plugins/zsh-fzf-packagemanager/zsh-fzf-packagemanager.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-fzf-packagemanager/zsh-fzf-packagemanager.plugin.zsh"
+fi
+
+# jq-zsh-plugin (jq integration)
+if [ -f "$HOME/.config/zsh/plugins/jq-zsh-plugin/jq-zsh.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/jq-zsh-plugin/jq-zsh.plugin.zsh"
+fi
+
+# k3d-oh-my-zsh-plugin (k3d completions)
+if [ -f "$HOME/.config/zsh/plugins/k3d-oh-my-zsh-plugin/k3d-oh-my-zsh-plugin.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/k3d-oh-my-zsh-plugin/k3d-oh-my-zsh-plugin.plugin.zsh"
+fi
+
+# zsh-k9s (k9s completions)
+if [ -f "$HOME/.config/zsh/plugins/zsh-k9s/zsh-k9s.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-k9s/zsh-k9s.plugin.zsh"
+fi
+
+# zsh-mise (mise completions)
+if [ -f "$HOME/.config/zsh/plugins/zsh-mise/zsh-mise.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-mise/zsh-mise.plugin.zsh"
+fi
+
+# zsh-ssh-agent (ssh-agent management)
+if [ -f "$HOME/.config/zsh/plugins/zsh-ssh-agent/zsh-ssh-agent.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-ssh-agent/zsh-ssh-agent.plugin.zsh"
+fi
+
+# ssh-host (ssh host completions)
+if [ -f "$HOME/.config/zsh/plugins/ssh-host/ssh-host.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/ssh-host/ssh-host.plugin.zsh"
+fi
+
+# xdg-basedirs (XDG directories)
+if [ -f "$HOME/.config/zsh/plugins/xdg-basedirs/xdg-basedirs.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/xdg-basedirs/xdg-basedirs.plugin.zsh"
+fi
+
+# zsh-fzf-git-worktree (git worktree with fzf)
+if [ -f "$HOME/.config/zsh/plugins/zsh-fzf-git-worktree/zsh-fzf-git-worktree.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-fzf-git-worktree/zsh-fzf-git-worktree.plugin.zsh"
+fi
+
+# git-fuzzy (fuzzy git operations)
+if [ -f "$HOME/.config/zsh/plugins/git-fuzzy/git-fuzzy.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/git-fuzzy/git-fuzzy.plugin.zsh"
+fi
+
+# zman (zsh help pages)
+if [ -f "$HOME/.config/zsh/plugins/zman/zman.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zman/zman.plugin.zsh"
+fi
+
+# zsh-you-should-use (reminds aliases)
+if [ -f "$HOME/.config/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh"
 fi
 
 # ============================================================================

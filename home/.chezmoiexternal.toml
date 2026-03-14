@@ -101,16 +101,82 @@
     url = "https://github.com/zpm-zsh/colorize"
     refreshPeriod = "168h"
 
-# fast-syntax-highlighting (better/faster syntax highlighting)
-[".config/zsh/plugins/fast-syntax-highlighting"]
-    type = "git-repo"
-    url = "https://github.com/zdharma-continuum/fast-syntax-highlighting"
-    refreshPeriod = "168h"
-
 # fd-zsh (fd command aliases and completions)
 [".config/zsh/plugins/fd-zsh"]
     type = "git-repo"
     url = "https://github.com/MohamedElashri/fd-zsh"
+    refreshPeriod = "168h"
+
+# fzf packagemanager (package manager integration with fzf)
+[".config/zsh/plugins/zsh-fzf-packagemanager"]
+    type = "git-repo"
+    url = "https://github.com/goarano/zsh-fzf-packagemanager"
+    refreshPeriod = "168h"
+
+# jq zsh plugin (jq integration)
+[".config/zsh/plugins/jq-zsh-plugin"]
+    type = "git-repo"
+    url = "https://github.com/reegnz/jq-zsh-plugin"
+    refreshPeriod = "168h"
+
+# k3d oh-my-zsh plugin (k3d completions)
+[".config/zsh/plugins/k3d-oh-my-zsh-plugin"]
+    type = "git-repo"
+    url = "https://github.com/dwaynebradley/k3d-oh-my-zsh-plugin"
+    refreshPeriod = "168h"
+
+# k9s zsh plugin (k9s completions)
+[".config/zsh/plugins/zsh-k9s"]
+    type = "git-repo"
+    url = "https://github.com/acidix/zsh-k9s"
+    refreshPeriod = "168h"
+
+# mise zsh plugin (mise completions)
+[".config/zsh/plugins/zsh-mise"]
+    type = "git-repo"
+    url = "https://github.com/wintermi/zsh-mise"
+    refreshPeriod = "168h"
+
+# ssh-agent zsh plugin (ssh-agent management)
+[".config/zsh/plugins/zsh-ssh-agent"]
+    type = "git-repo"
+    url = "https://github.com/sdiebolt/zsh-ssh-agent"
+    refreshPeriod = "168h"
+
+# ssh-host plugin (ssh host completions)
+[".config/zsh/plugins/ssh-host"]
+    type = "git-repo"
+    url = "https://github.com/obolientsev/ssh-host"
+    refreshPeriod = "168h"
+
+# xdg-basedirs plugin (XDG directories)
+[".config/zsh/plugins/xdg-basedirs"]
+    type = "git-repo"
+    url = "https://github.com/krahlos/xdg-basedirs"
+    refreshPeriod = "168h"
+
+# fzf-git-worktree plugin (git worktree with fzf)
+[".config/zsh/plugins/zsh-fzf-git-worktree"]
+    type = "git-repo"
+    url = "https://github.com/banyan/zsh-fzf-git-worktree"
+    refreshPeriod = "168h"
+
+# git-fuzzy plugin (fuzzy git operations)
+[".config/zsh/plugins/git-fuzzy"]
+    type = "git-repo"
+    url = "https://github.com/bigH/git-fuzzy"
+    refreshPeriod = "168h"
+
+# zman plugin (zsh help pages)
+[".config/zsh/plugins/zman"]
+    type = "git-repo"
+    url = "https://github.com/mattmc3/zman"
+    refreshPeriod = "168h"
+
+# you-should-use plugin (reminds aliases)
+[".config/zsh/plugins/zsh-you-should-use"]
+    type = "git-repo"
+    url = "https://github.com/MichaelAquilina/zsh-you-should-use"
     refreshPeriod = "168h"
 
 # alberti42's zsh plugins
