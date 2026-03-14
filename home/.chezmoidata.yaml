@@ -50,6 +50,15 @@ packages:
       - k3d
       - k9s
       - mise
+      - skaffold
+      - docker
+      - docker-compose
+      - kubectl
+      - helm
+      - just
+      - poetry
+      - ngrok
+      - ollama
     casks: []
   linux:
     common:
@@ -69,6 +78,12 @@ packages:
       - eza
       - gh
       - jq
+      - skaffold
+      - docker.io
+      - docker-compose
+      - kubectl
+      - helm
+      - ngrok
     dnf:
       - ripgrep
       - fd-find

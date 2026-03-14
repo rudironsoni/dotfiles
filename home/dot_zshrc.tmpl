@@ -279,6 +279,135 @@ if [ -f "$HOME/.config/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh"
 fi
 
 # ============================================================================
+# Zsh Completions
+# ============================================================================
+
+# 1Password CLI completions
+if [ -f "$HOME/.config/zsh/plugins/1password-op.plugin.zsh/1password-op.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/1password-op.plugin.zsh/1password-op.plugin.zsh"
+fi
+
+# Bash completions fallback
+if [ -f "$HOME/.config/zsh/plugins/zsh-bash-completions-fallback/zsh-bash-completions-fallback.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-bash-completions-fallback/zsh-bash-completions-fallback.plugin.zsh"
+fi
+
+# Claude Code completions
+if [ -f "$HOME/.config/zsh/plugins/claude-code-zsh-completion/claude-code-zsh-completion.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/claude-code-zsh-completion/claude-code-zsh-completion.plugin.zsh"
+fi
+
+# Chezmoi completions
+if [ -f "$HOME/.config/zsh/plugins/zsh-chezmoi/zsh-chezmoi.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-chezmoi/zsh-chezmoi.plugin.zsh"
+fi
+
+# cod - completion daemon
+if [ -f "$HOME/.config/zsh/plugins/cod/cod.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/cod/cod.plugin.zsh"
+fi
+
+# zsh-completion-sync
+if [ -f "$HOME/.config/zsh/plugins/zsh-completion-sync/zsh-completion-sync.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-completion-sync/zsh-completion-sync.plugin.zsh"
+fi
+
+# Copilot completions
+if [ -f "$HOME/.config/zsh/plugins/copilot.zsh/copilot.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/copilot.zsh/copilot.zsh"
+fi
+
+# ctop completions
+if [ -f "$HOME/.config/zsh/plugins/ctop/ctop.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/ctop/ctop.plugin.zsh"
+fi
+
+# Docker completions
+if [ -f "$HOME/.config/zsh/plugins/docker-zsh-completion/docker-zsh-completion.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/docker-zsh-completion/docker-zsh-completion.plugin.zsh"
+fi
+
+# Fancy completions
+if [ -f "$HOME/.config/zsh/plugins/zsh-fancy-completions/zsh-fancy-completions.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-fancy-completions/zsh-fancy-completions.plugin.zsh"
+fi
+
+# fzf zsh completions
+if [ -f "$HOME/.config/zsh/plugins/fzf-zsh-completions/fzf-zsh-completions.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/fzf-zsh-completions/fzf-zsh-completions.plugin.zsh"
+fi
+
+# Helmfile completions
+if [ -f "$HOME/.config/zsh/plugins/zsh-helmfile/zsh-helmfile.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-helmfile/zsh-helmfile.plugin.zsh"
+fi
+
+# Justfile completions
+if [ -f "$HOME/.config/zsh/plugins/zsh-justfile/zsh-justfile.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-justfile/zsh-justfile.plugin.zsh"
+fi
+
+# Kafka completions
+if [ -f "$HOME/.config/zsh/plugins/kafka-zsh-completions/kafka-zsh-completions.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/kafka-zsh-completions/kafka-zsh-completions.plugin.zsh"
+fi
+
+# Kind completions
+if [ -f "$HOME/.config/zsh/plugins/zsh-kind/zsh-kind.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-kind/zsh-kind.plugin.zsh"
+fi
+
+# Kompose completions
+if [ -f "$HOME/.config/zsh/plugins/kompose/kompose.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/kompose/kompose.plugin.zsh"
+fi
+
+# kubectl-fzf completions
+if [ -f "$HOME/.config/zsh/plugins/kubectl-fzf/kubectl-fzf.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/kubectl-fzf/kubectl-fzf.plugin.zsh"
+fi
+
+# Kustomize completions
+if [ -f "$HOME/.config/zsh/plugins/oh-my-kustomize/oh-my-kustomize.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/oh-my-kustomize/oh-my-kustomize.plugin.zsh"
+fi
+
+# ngrok completions
+if [ -f "$HOME/.config/zsh/plugins/ngrok.plugin.zsh/ngrok.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/ngrok.plugin.zsh/ngrok.plugin.zsh"
+fi
+
+# Ollama completions
+if [ -f "$HOME/.config/zsh/plugins/zsh-ollama-completion/zsh-ollama-completion.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-ollama-completion/zsh-ollama-completion.plugin.zsh"
+fi
+
+# Poetry completions
+if [ -f "$HOME/.config/zsh/plugins/zsh-poetry/zsh-poetry.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-poetry/zsh-poetry.plugin.zsh"
+fi
+
+# Pytest-fzf completions
+if [ -f "$HOME/.config/zsh/plugins/zsh-pytest-fzf/zsh-pytest-fzf.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-pytest-fzf/zsh-pytest-fzf.plugin.zsh"
+fi
+
+# SSH completions (enhanced)
+if [ -f "$HOME/.config/zsh/plugins/zsh-ssh/zsh-ssh.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-ssh/zsh-ssh.plugin.zsh"
+fi
+
+# Talosctl completions
+if [ -f "$HOME/.config/zsh/plugins/talosctl-zsh-plugin/talosctl-zsh-plugin.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/talosctl-zsh-plugin/talosctl-zsh-plugin.plugin.zsh"
+fi
+
+# uv completions
+if [ -f "$HOME/.config/zsh/plugins/zsh-uv/zsh-uv.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-uv/zsh-uv.plugin.zsh"
+fi
+
+# ============================================================================
 # Claude Code Configuration
 # ============================================================================
 # Model configuration

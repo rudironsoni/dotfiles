@@ -202,6 +202,173 @@
     refreshPeriod = "168h"
 
 # ============================================================================
+# Zsh Completions
+# ============================================================================
+
+# 1Password CLI completions
+[".config/zsh/plugins/1password-op.plugin.zsh"]
+    type = "git-repo"
+    url = "https://github.com/unixorn/1password-op.plugin.zsh"
+    refreshPeriod = "168h"
+
+# Bash completions fallback
+[".config/zsh/plugins/zsh-bash-completions-fallback"]
+    type = "git-repo"
+    url = "https://github.com/3v1n0/zsh-bash-completions-fallback"
+    refreshPeriod = "168h"
+
+# Claude Code completions
+[".config/zsh/plugins/claude-code-zsh-completion"]
+    type = "git-repo"
+    url = "https://github.com/1160054/claude-code-zsh-completion"
+    refreshPeriod = "168h"
+
+# Chezmoi completions
+[".config/zsh/plugins/zsh-chezmoi"]
+    type = "git-repo"
+    url = "https://github.com/mass8326/zsh-chezmoi"
+    refreshPeriod = "168h"
+
+# cod - completion daemon
+[".config/zsh/plugins/cod"]
+    type = "git-repo"
+    url = "https://github.com/dim-an/cod"
+    refreshPeriod = "168h"
+
+# zsh-completion-sync
+[".config/zsh/plugins/zsh-completion-sync"]
+    type = "git-repo"
+    url = "https://github.com/BronzeDeer/zsh-completion-sync"
+    refreshPeriod = "168h"
+
+# Copilot completions
+[".config/zsh/plugins/copilot.zsh"]
+    type = "git-repo"
+    url = "https://github.com/scaryrawr/copilot.zsh"
+    refreshPeriod = "168h"
+
+# ctop completions
+[".config/zsh/plugins/ctop"]
+    type = "git-repo"
+    url = "https://github.com/gantsign/zsh-plugins"
+    refreshPeriod = "168h"
+
+# Docker completions
+[".config/zsh/plugins/docker-zsh-completion"]
+    type = "git-repo"
+    url = "https://github.com/greymd/docker-zsh-completion"
+    refreshPeriod = "168h"
+
+# Fancy completions
+[".config/zsh/plugins/zsh-fancy-completions"]
+    type = "git-repo"
+    url = "https://github.com/z-shell/zsh-fancy-completions"
+    refreshPeriod = "168h"
+
+# fzf zsh completions
+[".config/zsh/plugins/fzf-zsh-completions"]
+    type = "git-repo"
+    url = "https://github.com/chitoku-k/fzf-zsh-completions"
+    refreshPeriod = "168h"
+
+# Helmfile completions
+[".config/zsh/plugins/zsh-helmfile"]
+    type = "git-repo"
+    url = "https://github.com/relkli/zsh-helmfile"
+    refreshPeriod = "168h"
+
+# Justfile completions
+[".config/zsh/plugins/zsh-justfile"]
+    type = "git-repo"
+    url = "https://github.com/JBarberU/zsh-justfile"
+    refreshPeriod = "168h"
+
+# Kafka completions
+[".config/zsh/plugins/kafka-zsh-completions"]
+    type = "git-repo"
+    url = "https://github.com/Dabz/kafka-zsh-completions"
+    refreshPeriod = "168h"
+
+# Kind completions
+[".config/zsh/plugins/zsh-kind"]
+    type = "git-repo"
+    url = "https://github.com/TomerFi/zsh-kind"
+    refreshPeriod = "168h"
+
+# Kompose completions
+[".config/zsh/plugins/kompose"]
+    type = "git-repo"
+    url = "https://github.com/gantsign/zsh-plugins"
+    refreshPeriod = "168h"
+
+# kubectl-fzf completions
+[".config/zsh/plugins/kubectl-fzf"]
+    type = "git-repo"
+    url = "https://github.com/bonnefoa/kubectl-fzf"
+    refreshPeriod = "168h"
+
+# Kustomize completions (oh-my-kustomize)
+[".config/zsh/plugins/oh-my-kustomize"]
+    type = "git-repo"
+    url = "https://github.com/ralgozino/oh-my-kustomize"
+    refreshPeriod = "168h"
+
+# ngrok completions
+[".config/zsh/plugins/ngrok.plugin.zsh"]
+    type = "git-repo"
+    url = "https://github.com/bostonaholic/ngrok.plugin.zsh"
+    refreshPeriod = "168h"
+
+# Ollama completions
+[".config/zsh/plugins/zsh-ollama-completion"]
+    type = "git-repo"
+    url = "https://github.com/Katrovsky/zsh-ollama-completion"
+    refreshPeriod = "168h"
+
+# Poetry completions
+[".config/zsh/plugins/zsh-poetry"]
+    type = "git-repo"
+    url = "https://github.com/fourdim/zsh-poetry"
+    refreshPeriod = "168h"
+
+# Pytest-fzf completions
+[".config/zsh/plugins/zsh-pytest-fzf"]
+    type = "git-repo"
+    url = "https://github.com/jszczepaniak/zsh-pytest-fzf"
+    refreshPeriod = "168h"
+
+# SSH completions (enhanced)
+[".config/zsh/plugins/zsh-ssh"]
+    type = "git-repo"
+    url = "https://github.com/sunlei/zsh-ssh"
+    refreshPeriod = "168h"
+
+# Talosctl completions
+[".config/zsh/plugins/talosctl-zsh-plugin"]
+    type = "git-repo"
+    url = "https://github.com/mephs/talosctl-zsh-plugin"
+    refreshPeriod = "168h"
+
+# uv completions
+[".config/zsh/plugins/zsh-uv"]
+    type = "git-repo"
+    url = "https://github.com/lipov3cz3k/zsh-uv"
+    refreshPeriod = "168h"
+
+# macOS-specific completions
+{{- if eq .chezmoi.os "darwin" }}
+[".config/zsh/plugins/zsh-xcode-completions"]
+    type = "git-repo"
+    url = "https://github.com/keith/zsh-xcode-completions"
+    refreshPeriod = "168h"
+
+[".config/zsh/plugins/zsh-completions"]
+    type = "git-repo"
+    url = "https://github.com/danydodson/zsh-completions"
+    refreshPeriod = "168h"
+{{- end }}
+
+# ============================================================================
 # Optional: Neovim Plugin Manager (lazy.nvim)
 # ============================================================================
 # [".config/nvim/lazy.nvim"]
