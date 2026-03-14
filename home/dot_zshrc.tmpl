@@ -21,6 +21,7 @@ setopt HIST_IGNORE_DUPS          # Don't record an entry that was just recorded 
 setopt HIST_IGNORE_ALL_DUPS      # Delete old recorded entry if new entry is a duplicate.
 setopt HIST_IGNORE_SPACE         # Don't record an entry starting with a space.
 setopt hist_reduce_blanks
+setopt HIST_FIND_NO_DUPS         # When searching history, don't show duplicates
 
 # ============================================================================
 # Autoload Utilities
@@ -51,6 +52,10 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' group-name ''
 # Show descriptions for completions
 zstyle ':completion:*:descriptions' format '%B%d%b'
+
+# Autocomplete configuration
+zstyle ':autocomplete:*' default-context history-incremental-search-backward
+zstyle ':autocomplete:*' min-input 1
 
 # ============================================================================
 # PATH Configuration
