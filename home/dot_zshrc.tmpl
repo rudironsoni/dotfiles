@@ -372,8 +372,8 @@ if [ -f "$HOME/.config/zsh/plugins/oh-my-kustomize/oh-my-kustomize.plugin.zsh" ]
     source "$HOME/.config/zsh/plugins/oh-my-kustomize/oh-my-kustomize.plugin.zsh"
 fi
 
-# ngrok completions (only if ngrok is installed)
-if command -v ngrok &>/dev/null && [ -f "$HOME/.config/zsh/plugins/ngrok.plugin.zsh/ngrok.plugin.zsh" ]; then
+# ngrok completions (only if ngrok is installed and working)
+if command -v ngrok &>/dev/null && ngrok --version &>/dev/null && [ -f "$HOME/.config/zsh/plugins/ngrok.plugin.zsh/ngrok.plugin.zsh" ]; then
     source "$HOME/.config/zsh/plugins/ngrok.plugin.zsh/ngrok.plugin.zsh"
 fi
 
@@ -382,13 +382,11 @@ if [ -f "$HOME/.config/zsh/plugins/zsh-ollama-completion/zsh-ollama-completion.p
     source "$HOME/.config/zsh/plugins/zsh-ollama-completion/zsh-ollama-completion.plugin.zsh"
 fi
 
-# Poetry completions (only if poetry is installed)
-if command -v poetry &>/dev/null && [ -f "$HOME/.config/zsh/plugins/zsh-poetry/zsh-poetry.plugin.zsh" ]; then
-    # Initialize ZSH_CACHE_DIR if not set (required by poetry plugin)
-    export ZSH_CACHE_DIR="${ZSH_CACHE_DIR:-$HOME/.cache/zsh}"
-    mkdir -p "$ZSH_CACHE_DIR/completions"
-    source "$HOME/.config/zsh/plugins/zsh-poetry/zsh-poetry.plugin.zsh"
-fi
+# Poetry completions (skip - requires oh-my-zsh/zinit compatibility)
+# Plugin uses $+commands syntax incompatible with bare zsh
+# if command -v poetry &>/dev/null; then
+#     poetry completions zsh > "${ZSH_CACHE_DIR:-$HOME/.cache/zsh}/completions/_poetry"
+# fi
 
 # Pytest-fzf completions
 if [ -f "$HOME/.config/zsh/plugins/zsh-pytest-fzf/zsh-pytest-fzf.plugin.zsh" ]; then
