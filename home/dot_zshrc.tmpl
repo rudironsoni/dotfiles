@@ -190,6 +190,11 @@ if [ -f "$HOME/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" 
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 fi
 
+# zsh-autocomplete (fzf-like dropdown for command history)
+if [ -f "$HOME/.config/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh" ]; then
+    source "$HOME/.config/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh"
+fi
+
 # fzf-tab (improves fzf integration with completions)
 if [ -f "$HOME/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh" ]; then
     source "$HOME/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh"
