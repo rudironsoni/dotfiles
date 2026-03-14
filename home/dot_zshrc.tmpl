@@ -118,14 +118,8 @@ bindkey -e
 
 # History search with prefix matching
 # Type "cd" and press Up to search history for "cd ..." commands
-bindkey "^[[A" history-beginning-search-backward
-bindkey "^[[B" history-beginning-search-forward
-
-# Alternative keybindings for history search
-bindkey "^[OA" history-search-backward
-bindkey "^[OB" history-search-forward
-bindkey "^[[A" history-search-backward
-bindkey "^[[B" history-search-forward
+bindkey '\e[A' history-beginning-search-backward
+bindkey '\e[B' history-beginning-search-forward
 
 # ============================================================================
 # Directory Navigation
