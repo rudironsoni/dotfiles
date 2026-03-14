@@ -13,6 +13,7 @@ packages:
       - wget
       - zsh
       - bash
+      - vim
       - oh-my-posh
       - tmux
       - fzf
@@ -34,6 +35,7 @@ packages:
       - wget
       - zsh
       - bash
+      - vim
       - tmux
       - fzf
       - btop

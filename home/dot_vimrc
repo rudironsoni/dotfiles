@@ -1,0 +1,171 @@
+" ~/.vimrc - Vim configuration
+" Managed by chezmoi: https://www.chezmoi.io/
+
+" ============================================================================
+" Basic Settings
+" ============================================================================
+
+" Use Vim settings, not Vi
+set nocompatible
+
+" Enable syntax highlighting
+syntax on
+
+" Enable file type detection and plugins
+filetype plugin indent on
+
+" Show line numbers
+set number
+
+" Show relative line numbers
+set relativenumber
+
+" Enable mouse support
+set mouse=a
+
+" Set encoding
+set encoding=utf-8
+
+" Set colorscheme (if available)
+if has('termguicolors')
+  set termguicolors
+endif
+
+" ============================================================================
+" Indentation
+" ============================================================================
+
+" Use spaces instead of tabs
+set expandtab
+
+" Set tab width to 2 spaces
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+
+" Auto-indent
+set autoindent
+set smartindent
+
+" ============================================================================
+" Search
+" ============================================================================
+
+" Highlight search results
+set hlsearch
+
+" Incremental search
+set incsearch
+
+" Ignore case when searching
+set ignorecase
+
+" Unless search contains uppercase
+set smartcase
+
+" ============================================================================
+" UI
+" ============================================================================
+
+" Show matching brackets
+set showmatch
+
+" Show cursor position
+set ruler
+
+" Show command in status line
+set showcmd
+
+" Always show status line
+set laststatus=2
+
+" Enable wildmenu
+set wildmenu
+set wildmode=list:longest,full
+
+" Keep cursor centered
+set scrolloff=8
+set sidescrolloff=8
+
+" ============================================================================
+" Backup & Swap
+" ============================================================================
+
+" Disable backup files
+set nobackup
+set nowritebackup
+
+" Disable swap files
+set noswapfile
+
+" ============================================================================
+" Clipboard
+" ============================================================================
+
+" Use system clipboard
+if has('clipboard')
+  set clipboard=unnamedplus
+endif
+
+" ============================================================================
+" Key Mappings
+" ============================================================================
+
+" Leader key
+let mapleader = " "
+
+" Quick save
+nnoremap <leader>w :w<CR>
+
+" Quick quit
+nnoremap <leader>q :q<CR>
+
+" Clear search highlight
+nnoremap <leader>h :nohl<CR>
+
+" Better window navigation
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" ============================================================================
+" Performance
+" ============================================================================
+
+" Reduce timeout
+set timeoutlen=500
+set ttimeoutlen=10
+
+" Fast terminal connection
+set ttyfast
+
+" ============================================================================
+" Behavior
+" ============================================================================
+
+" Allow hidden buffers
+set hidden
+
+" Auto-read changed files
+set autoread
+
+" Confirm before closing unsaved
+set confirm
+
+" Enable backspace in insert mode
+set backspace=indent,eol,start
+
+" ============================================================================
+" File Type Specific
+" ============================================================================
+
+" YAML/TOML use 2 spaces
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType toml setlocal ts=2 sts=2 sw=2 expandtab
+
+" Python uses 4 spaces
+autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
+
+" Makefile uses tabs
+autocmd FileType make setlocal noexpandtab

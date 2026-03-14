@@ -14,9 +14,25 @@
 {{-   $name = output "git" "config" "--global" "user.name" | trim }}
 {{- end }}
 
-# Prompt if empty
-{{- if eq $email "" }}{{ $email = promptString "Git email address" }}{{ end }}
-{{- if eq $name "" }}{{ $name = promptString "Git user name" }}{{ end }}
+# Allow env overrides for automation
+{{- if env "CHEZMOI_EMAIL" }}{{ $email = env "CHEZMOI_EMAIL" }}{{ end }}
+{{- if env "CHEZMOI_NAME" }}{{ $name = env "CHEZMOI_NAME" }}{{ end }}
+
+# Prompt if empty (only in interactive mode)
+{{- if eq $email "" }}
+{{-   if env "CI" }}
+{{-     $email = "rudimar@outlook.com" }}
+{{-   else }}
+{{-     $email = promptString "Git email address" }}
+{{-   end }}
+{{- end }}
+{{- if eq $name "" }}
+{{-   if env "CI" }}
+{{-     $name = "Rudimar Ronsoni" }}
+{{-   else }}
+{{-     $name = promptString "Git user name" }}
+{{-   end }}
+{{- end }}
 
 [data]
     email = {{ $email | quote }}
