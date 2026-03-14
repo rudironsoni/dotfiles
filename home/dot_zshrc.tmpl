@@ -121,11 +121,6 @@ fi
 # Use emacs keybindings (default is vi)
 bindkey -e
 
-# History search with prefix matching
-# Type "cd" and press Up to search history for "cd ..." commands
-bindkey "^[[A" history-beginning-search-backward
-bindkey "^[[B" history-beginning-search-forward
-
 # ============================================================================
 # Directory Navigation
 # ============================================================================
@@ -478,3 +473,11 @@ test -e "$HOME/.shellfishrc" && source "$HOME/.shellfishrc"
 # Opentmux Configuration
 # ============================================================================
 export OPENCODE_PORT=4096
+
+# ============================================================================
+# Keybindings (Must be last to override any plugin defaults)
+# ============================================================================
+# History search with prefix matching
+# Type "cd" and press Up to search history for "cd ..." commands
+bindkey "^[[A" history-beginning-search-backward
+bindkey "^[[B" history-beginning-search-forward
