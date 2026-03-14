@@ -12,6 +12,10 @@ shell_alt: "bash"
 # 1Password secrets configuration
 # Change these paths to match your vault structure
 secrets:
+  service_account_token:
+    vault: "Private"
+    item: "Service Account Token"
+    field: "credential"
   github_mcp_token:
     vault: "vault-prd"
     item: "GitHub MCP Token"

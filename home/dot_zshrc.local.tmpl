@@ -22,7 +22,7 @@
 #   op service-account create "Dotfiles Automation" --vault "Personal"
 #
 # Store the token in 1Password as "Service Account Token"
-export OP_SERVICE_ACCOUNT_TOKEN={{ if lookPath "op" }}{{ output "op" "read" "op://Personal/Service Account Token/credential" | trim | quote }}{{ else }}""{{ end }}
+export OP_SERVICE_ACCOUNT_TOKEN={{ if lookPath "op" }}{{ output "op" "read" (printf "op://%s/%s/%s" .secrets.service_account_token.vault .secrets.service_account_token.item .secrets.service_account_token.field) | trim | quote }}{{ else }}""{{ end }}
 
 # ============================================================================
 # GitHub Tokens
