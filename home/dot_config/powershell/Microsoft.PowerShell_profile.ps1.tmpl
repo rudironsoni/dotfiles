@@ -3,20 +3,28 @@
 # PowerShell 7+ profile
 
 # ============================================================================
+# Oh My Posh
+# ============================================================================
+# Use emodipt-extend theme
+if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+    oh-my-posh init pwsh --config 'https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/emodipt-extend.omp.json' | Invoke-Expression
+}
+
+# ============================================================================
 # PSReadLine Configuration
 # ============================================================================
 # Enable PSReadLine for better editing experience
 if (Get-Module -ListAvailable -Name PSReadLine) {
     Import-Module PSReadLine
-    
+
     # Set prediction source
     Set-PSReadLineOption -PredictionSource History
-    
+
     # Enable history search
     Set-PSReadLineOption -HistorySearchCursorMovesToEnd
-    
+
     # Enable bold for different colors
-    Set-PSReadLineOption -Colors @{ 
+    Set-PSReadLineOption -Colors @{
         Comment = 'DarkGreen'
         Keyword = 'DarkGreen'
         String = 'DarkYellow'
@@ -27,7 +35,7 @@ if (Get-Module -ListAvailable -Name PSReadLine) {
         Type = 'Yellow'
         Number = 'Magenta'
     }
-    
+
     # Key bindings
     Set-PSReadLineKeyHandler -Key Up -Function HistorySearchBackward
     Set-PSReadLineKeyHandler -Key Down -Function HistorySearchForward
