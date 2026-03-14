@@ -223,11 +223,11 @@ alias cctt="claude --verbose --dangerously-skip-permissions --teammate-mode tmux
 # ============================================================================
 {{- if lookPath "op" }}
 # GitHub Personal Access Token
-export GITHUB_MCP_TOKEN={{ output "op" "read" "op://vault-prd/GitHub MCP Token/credential" | trim | quote }}
+export GITHUB_MCP_TOKEN={{ output "op" "read" (printf "op://%s/%s/%s" .secrets.github_mcp_token.vault .secrets.github_mcp_token.item .secrets.github_mcp_token.field) | trim | quote }}
 export GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_MCP_TOKEN}
 
 # Synthetic API Key
-export SYNTHETIC_API_KEY={{ output "op" "read" "op://vault-prd/Synthetic API Key/credential" | trim | quote }}
+export SYNTHETIC_API_KEY={{ output "op" "read" (printf "op://%s/%s/%s" .secrets.synthetic_api_key.vault .secrets.synthetic_api_key.item .secrets.synthetic_api_key.field) | trim | quote }}
 export ANTHROPIC_AUTH_TOKEN=${SYNTHETIC_API_KEY}
 
 # Anthropic API Base URL

@@ -9,6 +9,18 @@ email: "rudimar@outlook.com"
 shell: "zsh"
 shell_alt: "bash"
 
+# 1Password secrets configuration
+# Change these paths to match your vault structure
+secrets:
+  github_mcp_token:
+    vault: "vault-prd"
+    item: "GitHub MCP Token"
+    field: "credential"
+  synthetic_api_key:
+    vault: "vault-prd"
+    item: "Synthetic API Key"
+    field: "credential"
+
 # Package definitions (merged from packages.yaml)
 packages:
   darwin:
