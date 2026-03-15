@@ -8,18 +8,27 @@ case $- in
 esac
 
 # ============================================================================
-# History
+# History Configuration (Feature Parity with Zsh)
 # ============================================================================
-HISTCONTROL=ignoreboth
-export HISTSIZE=10000
-export HISTFILESIZE=20000
+export HISTSIZE=100000
+export HISTFILESIZE=100000
+export HISTFILE=~/.bash_history
+
+# History options equivalent to Zsh
+HISTCONTROL=ignoreboth:erasedups
+HISTTIMEFORMAT="%F %T "
+export HISTIGNORE="ls:ps:history:exit:pwd:clear"
+
 # Append to history rather than overwriting
 shopt -s histappend
+# Save multi-line commands as single entry
+shopt -s cmdhist
 # Check window size after each command
 shopt -s checkwinsize
-# Enable timed history
-HISTTIMEFORMAT="%F %T "
-export HISTIGNORE="ls:ps:exit"
+# Enable extended pattern matching
+shopt -s extglob
+# Enable programmable completion
+shopt -s progcomp
 
 # ============================================================================
 # Paths
@@ -36,6 +45,16 @@ export PATH="$HOME/.local/bin:$PATH"
 if [ -d "$HOME/node_modules/.bin" ]; then
     export PATH="$HOME/node_modules/.bin:$PATH"
 fi
+
+# ============================================================================
+# Input/Readline Configuration for History Search
+# ============================================================================
+# Bind arrow keys to history-beginning-search (prefix matching)
+# This goes in ~/.inputrc, but we can set it here too
+bind '"\e[A": history-search-backward' 2>/dev/null || true
+bind '"\e[B": history-search-forward' 2>/dev/null || true
+bind '"\e[C": forward-char' 2>/dev/null || true
+bind '"\e[D": backward-char' 2>/dev/null || true
 
 # ============================================================================
 # Aliases
@@ -66,6 +85,10 @@ alias ls='ls -G'
 alias ls='ls --color=auto'
 {{- end }}
 
+# History search
+alias h='history'
+alias hg='history | grep'
+
 # ============================================================================
 # Prompt (Oh My Posh)
 # ============================================================================
@@ -89,6 +112,42 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 # ============================================================================
+# Claude Code Configuration
+# ============================================================================
+export ANTHROPIC_DEFAULT_OPUS_MODEL=hf:moonshotai/Kimi-K2.5
+export ANTHROPIC_DEFAULT_SONNET_MODEL=hf:moonshotai/Kimi-K2.5
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=hf:MiniMaxAI/MiniMax-M2.5
+export CLAUDE_CODE_SUBAGENT_MODEL=hf:moonshotai/Kimi-K2.5
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+
+# Claude Code aliases
+alias cc="claude --verbose --dangerously-skip-permissions"
+alias ccti="claude --verbose --dangerously-skip-permissions --teammate-mode in-process"
+alias cctt="claude --verbose --dangerously-skip-permissions --teammate-mode tmux"
+
+# ============================================================================
+# Secrets (via 1Password)
+# ============================================================================
+{{- if lookPath "op" }}
+# GitHub Personal Access Token
+export GITHUB_MCP_TOKEN={{ output "op" "read" (printf "op://%s/%s/%s" .secrets.github_mcp_token.vault .secrets.github_mcp_token.item .secrets.github_mcp_token.field) | trim | quote }}
+export GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_MCP_TOKEN}
+
+# Synthetic API Key
+export SYNTHETIC_API_KEY={{ output "op" "read" (printf "op://%s/%s/%s" .secrets.synthetic_api_key.vault .secrets.synthetic_api_key.item .secrets.synthetic_api_key.field) | trim | quote }}
+export ANTHROPIC_AUTH_TOKEN=${SYNTHETIC_API_KEY}
+
+# Anthropic API Base URL
+export ANTHROPIC_BASE_URL="https://api.synthetic.new/anthropic"
+{{- end }}
+
+# ============================================================================
+# Opentmux Configuration
+# ============================================================================
+export OPENCODE_PORT=4096
+
+# ============================================================================
 # OS-Specific Configuration
 # ============================================================================
 {{- if eq .chezmoi.os "darwin" }}
@@ -101,9 +160,21 @@ alias update='sudo apt update && sudo apt upgrade'
 {{- end }}
 
 # ============================================================================
-# FZF Integration
+# FZF Integration (Advanced Autocomplete)
 # ============================================================================
 [ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"
+
+# FZF configuration for better completion
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+export FZF_CTRL_T_OPTS='--preview "bat --style=numbers --color=always --line-range :500 {}"'
+export FZF_CTRL_R_OPTS='--preview "echo {}" --preview-window down:3:hidden:wrap --bind "ctrl-/:toggle-preview"'
+export FZF_ALT_C_OPTS='--preview "tree -C {} | head -200"'
+
+# Enable FZF key bindings and completion
+if command -v fzf &> /dev/null; then
+    # Better history search with FZF
+    alias fh='history | fzf'
+fi
 
 # ============================================================================
 # Additional Configurations

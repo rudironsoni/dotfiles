@@ -1,0 +1,63 @@
+# ~/.inputrc - Readline configuration
+# Managed by chezmoi: https://chezmoi.io/
+# This configures bash line editing behavior
+
+# ============================================================================
+# History Search with Arrow Keys (Feature Parity with Zsh)
+# ============================================================================
+# Enable history search with prefix matching using arrow keys
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\e[C": forward-char
+"\e[D": backward-char
+
+# Also support Ctrl+P and Ctrl+N for emacs-style
+"\C-p": history-search-backward
+"\C-n": history-search-forward
+
+# ============================================================================
+# Input Mode
+# ============================================================================
+# Use emacs editing mode (default)
+set editing-mode emacs
+
+# Enable 8-bit input
+set input-meta on
+set output-meta on
+set convert-meta off
+
+# ============================================================================
+# Completion Behavior
+# ============================================================================
+# Ignore case when completing
+set completion-ignore-case on
+
+# Show all completions on single tab
+set show-all-if-ambiguous on
+
+# Mark directories with / when completing
+set mark-directories on
+
+# Enable visible bell (no beeping)
+set bell-style visible
+
+# ============================================================================
+# Display
+# ============================================================================
+# Show match list immediately
+set show-all-if-ambiguous on
+
+# Show match list on single tab
+set show-all-if-unmodified on
+
+# Highlight matching prefix
+set colored-stats on
+
+# ============================================================================
+# Misc
+# ============================================================================
+# Enable tab completion
+set enable-bracketed-paste on
+
+# Expand history references (like !!) immediately
+set expand-tilde on

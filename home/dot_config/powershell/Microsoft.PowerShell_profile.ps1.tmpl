@@ -3,6 +3,21 @@
 # PowerShell 7+ profile
 
 # ============================================================================
+# History Configuration
+# ============================================================================
+# Set maximum history count (PowerShell equivalent to HISTSIZE/SAVEHIST)
+$MaximumHistoryCount = 100000
+
+# Configure PSReadLine history options
+$PSReadLineOptions = @{
+    MaximumHistoryCount = 100000
+    HistorySearchCursorMovesToEnd = $true
+    ShowToolTips = $true
+    BellStyle = 'None'
+    EditMode = 'Emacs'
+}
+
+# ============================================================================
 # Oh My Posh
 # ============================================================================
 # Use emodipt-extend theme
@@ -17,11 +32,12 @@ if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
 if (Get-Module -ListAvailable -Name PSReadLine) {
     Import-Module PSReadLine
 
-    # Set prediction source
-    Set-PSReadLineOption -PredictionSource History
+    # Apply history options
+    Set-PSReadLineOption @PSReadLineOptions
 
-    # Enable history search
-    Set-PSReadLineOption -HistorySearchCursorMovesToEnd
+    # Set prediction source with ListView for dropdown-style completion
+    Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+    Set-PSReadLineOption -PredictionViewStyle ListView
 
     # Enable bold for different colors
     Set-PSReadLineOption -Colors @{
@@ -34,11 +50,34 @@ if (Get-Module -ListAvailable -Name PSReadLine) {
         Parameter = 'Cyan'
         Type = 'Yellow'
         Number = 'Magenta'
+        Prediction = 'DarkGray'
+        Selection = 'Black'
+        ListPredictionSelected = 'Cyan'
     }
 
-    # Key bindings
-    Set-PSReadLineKeyHandler -Key Up -Function HistorySearchBackward
-    Set-PSReadLineKeyHandler -Key Down -Function HistorySearchForward
+    # Key bindings - Arrow keys for history search with prefix matching
+    Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
+    Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+    
+    # Additional search keybindings (Ctrl+R for reverse search)
+    Set-PSReadLineKeyHandler -Key Ctrl+r -Function ReverseSearchHistory
+    
+    # Accept prediction with Right Arrow
+    Set-PSReadLineKeyHandler -Key RightArrow -Function ForwardWord
+}
+
+# ============================================================================
+# PSFzf (FZF Integration for PowerShell)
+# ============================================================================
+# Install PSFzf if not present: Install-Module PSFzf -Scope CurrentUser
+if (Get-Module -ListAvailable -Name PSFzf) {
+    Import-Module PSFzf
+    
+    # Set up PSFzf keybindings
+    Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
+    
+    # Enable tab expansion with FZF
+    Set-PsFzfOption -TabExpansion
 }
 
 # ============================================================================
@@ -46,11 +85,35 @@ if (Get-Module -ListAvailable -Name PSReadLine) {
 # ============================================================================
 Set-Alias -Name ll -Value Get-ChildItem
 Set-Alias -Name la -Value Get-ChildItem -Option AllScope -ArgumentList @('-Force')
+Set-Alias -Name l -Value Get-ChildItem -Option AllScope -ArgumentList @('-Name')
 Set-Alias -Name g -Value git
 Set-Alias -Name gs -Value git\ status
 Set-Alias -Name ga -Value git\ add
 Set-Alias -Name gc -Value git\ commit
 Set-Alias -Name gp -Value git\ push
+Set-Alias -Name gl -Value git\ log
+Set-Alias -Name which -Value Get-Command
+
+# ============================================================================
+# Claude Code Configuration
+# ============================================================================
+$env:ANTHROPIC_DEFAULT_OPUS_MODEL = "hf:moonshotai/Kimi-K2.5"
+$env:ANTHROPIC_DEFAULT_SONNET_MODEL = "hf:moonshotai/Kimi-K2.5"
+$env:ANTHROPIC_DEFAULT_HAIKU_MODEL = "hf:MiniMaxAI/MiniMax-M2.5"
+$env:CLAUDE_CODE_SUBAGENT_MODEL = "hf:moonshotai/Kimi-K2.5"
+$env:CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = 1
+$env:CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = 1
+
+# Claude Code function
+function cc {
+    claude --verbose --dangerously-skip-permissions @args
+}
+function ccti {
+    claude --verbose --dangerously-skip-permissions --teammate-mode in-process @args
+}
+function cctt {
+    claude --verbose --dangerously-skip-permissions --teammate-mode tmux @args
+}
 
 # ============================================================================
 # Environment Variables
@@ -63,6 +126,9 @@ $env:XDG_CONFIG_HOME = "$HOME/.config"
 $env:XDG_DATA_HOME = "$HOME/.local/share"
 $env:XDG_CACHE_HOME = "$HOME/.cache"
 
+# Opentmux Configuration
+$env:OPENCODE_PORT = 4096
+
 # ============================================================================
 # Editor
 # ============================================================================
@@ -72,6 +138,31 @@ if (-not $env:EDITOR) {
 if (-not $env:VISUAL) {
     $env:VISUAL = $env:EDITOR
 }
+
+# ============================================================================
+# Secrets (via 1Password)
+# ============================================================================
+{{- if lookPath "op" }}
+# Check if op CLI is available and load secrets
+$opCheck = Get-Command op -ErrorAction SilentlyContinue
+if ($opCheck) {
+    try {
+        # GitHub Personal Access Token
+        $env:GITHUB_MCP_TOKEN = (op read "op://{{ .secrets.github_mcp_token.vault }}/{{ .secrets.github_mcp_token.item }}/{{ .secrets.github_mcp_token.field }}" 2>$null)
+        $env:GITHUB_PERSONAL_ACCESS_TOKEN = $env:GITHUB_MCP_TOKEN
+        
+        # Synthetic API Key
+        $env:SYNTHETIC_API_KEY = (op read "op://{{ .secrets.synthetic_api_key.vault }}/{{ .secrets.synthetic_api_key.item }}/{{ .secrets.synthetic_api_key.field }}" 2>$null)
+        $env:ANTHROPIC_AUTH_TOKEN = $env:SYNTHETIC_API_KEY
+        
+        # Anthropic API Base URL
+        $env:ANTHROPIC_BASE_URL = "https://api.synthetic.new/anthropic"
+    }
+    catch {
+        # Silently continue if 1Password is not unlocked or items don't exist
+    }
+}
+{{- end }}
 
 # ============================================================================
 # Machine-Specific Configuration
@@ -85,15 +176,16 @@ $env:HOME_ENV = "true"
 # ============================================================================
 # Functions
 # ============================================================================
-function which {
-    param ( [string]$Command )
-    Get-Command -Name $Command -ErrorAction SilentlyContinue |
-        Select-Object -ExpandProperty Source -ErrorAction SilentlyContinue
-}
-
 function .. { Set-Location .. }
 function ... { Set-Location ../.. }
 function .... { Set-Location ../../.. }
+
+# Quick directory navigation with FZF
+function fd {
+    $dir = Get-ChildItem -Directory -Recurse -ErrorAction SilentlyContinue | 
+           Invoke-Fzf -Prompt "Select directory: "
+    if ($dir) { Set-Location $dir }
+}
 
 # ============================================================================
 # Additional Configurations
